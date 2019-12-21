@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="robutev3.android">
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+
+    <application>
+
+        <service
+            android:name=".EV3Service"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BLUETOOTH" />
+
+    </application>
+
+</manifest>

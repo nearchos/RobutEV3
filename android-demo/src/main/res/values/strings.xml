@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">RobutEV3 - Android Demo</string>
+    <string name="Device_icon">Device icon</string>
+    <string name="Name">Name</string>
+    <string name="MAC_Address">MAC Address</string>
+    <string name="USB_Host_Mode">USB Host Mode</string>
+    <string name="Ignore_non_EV3_Bluetooth_devices">Ignore non-EV3 Bluetooth devices</string>
+    <string name="Bluetooth_is_not_supported_on_this_device">Bluetooth is not supported on this device</string>
+    <string name="Bluetooth_is_not_enabled">Bluetooth is not enabled</string>
+    <string name="Connected">Connected</string>
+    <string name="Connecting">Connecting …</string>
+    <string name="Started">Started</string>
+    <string name="Starting">Starting …</string>
+    <string name="Beep">Beep</string>
+    <string name="Play">Play</string>
+
+    <string name="title_activity_control">ControlActivity</string>
+    <string name="Brick_info">Brick info</string>
+    <string name="Motors">Motors</string>
+    <string name="Sound">Sound</string>
+
+    <string name="A">A</string>
+    <string name="B">B</string>
+    <string name="C">C</string>
+    <string name="D">D</string>
+    <string name="Lock_ports_B_and_C">Lock ports B and C</string>
+    <string name="MinPower">-100</string>
+    <string name="MaxPower">+100</string>
+    <string name="Zero">0</string>
+
+    <string name="Do">Do</string>
+    <string name="Re">Re</string>
+    <string name="Mi">Mi</string>
+    <string name="Fa">Fa</string>
+    <string name="Sol">Sol</string>
+    <string name="La">La</string>
+    <string name="Ti">Ti</string>
+    <string name="Do_P">Do\'</string>
+
+
+</resources>
