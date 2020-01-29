@@ -1,7 +1,7 @@
 package robutev3.core;
 
 /**
- * @author Nearchos
+ * @author Nearchos Paspallis [http://nearchos.github.io]
  * Created: 09-Dec-19
  */
 public class SensorTouch {

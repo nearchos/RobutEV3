@@ -378,4 +378,13 @@ class Code {
 //    public static int COLOR_RGB_RAW         = 4;
 //    public static int COLOR_CALIBRATION     = 5;
 
+	public static int SENSOR_TYPE_ULTRASONIC			= 30;
+	public static int SENSOR_MODE_ULTRASONIC_CM   		= 0;
+	public static int SENSOR_MODE_ULTRASONIC_INCH  		= 1;
+	public static int SENSOR_MODE_ULTRASONIC_LISTEN		= 2;
+	public static int SENSOR_MODE_ULTRASONIC_SI_CM 		= 3;
+	public static int SENSOR_MODE_ULTRASONIC_SI_INCH	= 4;
+	public static int SENSOR_MODE_ULTRASONIC_DC_CM  	= 5;
+	public static int SENSOR_MODE_ULTRASONIC_DC_INCH	= 6;
+
 }

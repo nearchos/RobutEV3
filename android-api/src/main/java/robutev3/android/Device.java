@@ -1,13 +1,15 @@
 package robutev3.android;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Objects;
 
 /**
  * @author Nearchos
  * Created: 25-May-19
  */
-public class Device implements Serializable {
+public class Device implements Parcelable {
 
     public static final String EXTRA_DEVICE = "extra-device";
 
@@ -22,6 +24,30 @@ public class Device implements Serializable {
         this.name = name;
         this.address = address;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(type.name());
+        dest.writeString(name);
+        dest.writeString(address);
+    }
+
+    public static final Creator<Device> CREATOR = new Creator<Device>() {
+        @Override
+        public Device [] newArray(int size) {
+            return new Device[size];
+        }
+
+        @Override
+        public Device createFromParcel(Parcel source) {
+            return new Device(Type.valueOf(source.readString()), source.readString(), source.readString());
+        }
+    };
 
     public Type getType() {
         return type;

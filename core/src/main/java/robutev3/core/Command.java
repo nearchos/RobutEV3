@@ -11,6 +11,12 @@ import java.util.List;
  */
 class Command {
 
+	private static int sequence = 1;
+
+	int getSequence() {
+		return sequence;
+	}
+
 	private List<Byte> ops;
 
 	private byte commandType;
@@ -30,12 +36,12 @@ class Command {
 		ops.add((byte) 0xFF);
 		ops.add((byte) 0xFF);
 		// Message counter
-		if (Brick.sequence < 65535)
-			Brick.sequence++;
+		if (sequence < 65535)
+			sequence++;
 		else
-			Brick.sequence = 1;
-		ops.add((byte) Brick.sequence);
-		ops.add((byte) (Brick.sequence >> 8));
+			sequence = 1;
+		ops.add((byte) sequence);
+		ops.add((byte) (sequence >> 8));
 		// CommandType
 		ops.add(commandType);
 		if (commandType == Code.DIRECT_COMMAND_REPLY || commandType == Code.DIRECT_COMMAND_NO_REPLY) {

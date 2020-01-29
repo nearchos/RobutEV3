@@ -112,6 +112,28 @@ public class Brick implements IBrick {
         }
     }
 
+    void play(final int volume, final String fileName) {
+        try {
+            final Command command = new Command(Code.DIRECT_COMMAND_NO_REPLY);
+            final String fullFilename = fileName; // todo
+warning("fullFilename: " + fullFilename); // todo
+            command.speakerPlaySound(volume, fullFilename);
+            sendCommand(command);
+        } catch (IOException ioe) {
+            error(ioe);
+        }
+    }
+
+    void playStop() {
+        try {
+            final Command command = new Command(Code.DIRECT_COMMAND_NO_REPLY);
+            command.speakerBreakPlay();
+            sendCommand(command);
+        } catch (IOException ioe) {
+            error(ioe);
+        }
+    }
+
     void light(final Light light) {
         try {
             Command c = new Command(Code.DIRECT_COMMAND_NO_REPLY);
@@ -130,13 +152,6 @@ public class Brick implements IBrick {
             final ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[] { valueRaw[5], valueRaw[6], valueRaw[7], valueRaw[8] });
             byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
             final int value = byteBuffer.getInt();
-//warning(String.format(Locale.US, "%s %s %s %s -- %d",
-//        Integer.toBinaryString(valueRaw[5]),
-//        Integer.toBinaryString(valueRaw[6]),
-//        Integer.toBinaryString(valueRaw[7]),
-//        Integer.toBinaryString(valueRaw[8]),
-//        value
-//        ));//todo
             return value;
         } catch (IOException ioe) {
             error(ioe);
@@ -144,27 +159,24 @@ public class Brick implements IBrick {
         return 0;
     }
 
-    static int sequence = 1; // todo increase?
-
-    private byte [] sendCommand(Command c) throws IOException { // todo
+    private byte [] sendCommand(Command command) throws IOException {
         synchronized (communicationInterface) {
-            communicationInterface.write(c.byteCode());
-            if (c.getCommandType() == Code.DIRECT_COMMAND_REPLY || c.getCommandType() == Code.SYSTEM_COMMAND_REPLY) {
-                final byte [] reply = waitForReply(c.getCommandType());
+            communicationInterface.write(command.byteCode());
+            if (command.getCommandType() == Code.DIRECT_COMMAND_REPLY || command.getCommandType() == Code.SYSTEM_COMMAND_REPLY) {
+                final byte [] reply = waitForReply(command.getCommandType());
                 return reply;
             } else {
-                return new byte[] { (byte) sequence };
+                return new byte[] { (byte) command.getSequence() };
             }
         }
     }
 
-    private byte [] waitForReply(byte commandType) throws IOException { // todo
+    private byte [] waitForReply(byte commandType) throws IOException {
         while (true) {
             byte[] reply = communicationInterface.read();
-//            byte[] reply = communicationInterface.readReply();
             if (commandType == Code.DIRECT_COMMAND_REPLY && reply[4] != Code.DIRECT_REPLY) {
                 try {
-                    printMessage(reply);
+                    debug(reply);
                     throw new Exception(String.format("Direct command: %02X:%02X returned error", reply[2], reply[3]));
                 } catch (Exception e) {
                     error(e);
@@ -172,6 +184,7 @@ public class Brick implements IBrick {
             }
             if (commandType == Code.SYSTEM_COMMAND_REPLY && reply[4] != Code.SYSTEM_REPLY) {
                 try {
+                    debug(reply);
                     throw new Exception(String.format("System command: %02X:%02X returned error", reply[2], reply[3]));
                 } catch (Exception e) {
                     error(e);
@@ -181,14 +194,14 @@ public class Brick implements IBrick {
         }
     }
 
-    private void printMessage(byte[] cmd) { // todo delete
-        System.out.println();
-        System.out.print("send" + " 0x|");
-        for (int i = 0; i < cmd.length - 1; i++) {
-            System.out.printf("%02X:", cmd[i]);
+    private void debug(byte [] messageBytes) {
+        System.err.println();
+        System.err.print("send" + " 0x|");
+        for (int i = 0; i < messageBytes.length - 1; i++) {
+            System.err.printf("%02X:", messageBytes[i]);
         }
-        System.out.printf("%02X|", cmd[cmd.length - 1]);
-        System.out.println();
+        System.err.printf("%02X|", messageBytes[messageBytes.length - 1]);
+        System.err.println();
     }
 
     // Log system

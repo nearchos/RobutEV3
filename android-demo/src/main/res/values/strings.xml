@@ -11,13 +11,22 @@
     <string name="Connecting">Connecting …</string>
     <string name="Started">Started</string>
     <string name="Starting">Starting …</string>
+    <string name="Could_not_connect">Could not connect</string>
+    <string name="Connection_broken">Connection broken</string>
     <string name="Beep">Beep</string>
     <string name="Play">Play</string>
+    <string name="Distance_measured_by_ultrasonic">Distance measured by ultrasonic …</string>
+    <string name="Ultrasonic_distance">Ultrasonic distance: %1$d %2$s</string>
 
     <string name="title_activity_control">ControlActivity</string>
     <string name="Brick_info">Brick info</string>
     <string name="Motors">Motors</string>
     <string name="Sound">Sound</string>
+    <string name="Ultrasonic">Ultrasonic</string>
+    <string name="Poll">Poll</string>
+    <string name="Listen">Listen</string>
+    <string name="Listening_to_ultrasonic_at_port">Listening to ultrasonic at port %1$s …</string>
+    <string name="Stopped_listening_to_ultrasonic">Stopped listening to ultrasonic …</string>
 
     <string name="A">A</string>
     <string name="B">B</string>
@@ -37,5 +46,13 @@
     <string name="Ti">Ti</string>
     <string name="Do_P">Do\'</string>
 
+    <string name="Select_a_port">Select a port</string>
+    <string-array name="SensorPortsArray">
+        <item>@string/Select_a_port</item>
+        <item>Port 1</item>
+        <item>Port 2</item>
+        <item>Port 3</item>
+        <item>Port 4</item>
+    </string-array>
 
 </resources>

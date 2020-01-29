@@ -6,9 +6,11 @@ package robutev3.core;
  */
 public class Sensor {
 
-    public enum Type { TOUCH, COLOR }
+    public enum Type { TOUCH, COLOR, ULTRASONIC, INFRA_RED }
 
-    interface Mode { String name(); }
+    public interface Mode {
+        String name();
+    }
 
     private final Brick brick;
     private PortSensor port;
@@ -34,6 +36,11 @@ public class Sensor {
 
     public SensorSelector port4() {
         this.port = PortSensor.FOUR;
+        return new SensorSelector();
+    }
+
+    public SensorSelector port(PortSensor portSensor) {
+        this.port = portSensor;
         return new SensorSelector();
     }
 
@@ -72,6 +79,8 @@ public class Sensor {
         public SensorColor.AmbientSensible ambient() { return new SensorColor(brick, port).new AmbientSensible(); }
 
         public SensorColor.ColorSensible color() { return new SensorColor(brick, port).new ColorSensible(); }
+
+        public SensorUltrasonic.DistanceSensible ultrasonic() { return new SensorUltrasonic(brick, port).new DistanceSensible(); }
     }
 
     public class MotorSensorSelector {

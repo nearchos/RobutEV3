@@ -8,7 +8,7 @@ public class Sound {
 
     private final Brick brick;
 
-    public Sound(final Brick brick) {
+    Sound(final Brick brick) {
         this.brick = brick;
     }
 
@@ -18,6 +18,14 @@ public class Sound {
 
     public void beep(final int frequency, final int duration, final int volume) {
         new Beepable(frequency, duration, volume).play();
+    }
+
+    public void play(final SoundFile soundFile, final int volume) {
+        brick.play(volume, soundFile.getFileName());
+    }
+
+    public void stop() {
+        brick.playStop();
     }
 
     class Beepable {
@@ -74,7 +82,6 @@ public class Sound {
         }
 
         void play() {
-            //todo
             brick.beep(this);
         }
     }

@@ -6,8 +6,10 @@ import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +21,7 @@ import java.util.Locale;
 import robutev3.android.demo.ControlActivity;
 import robutev3.android.demo.R;
 import robutev3.core.Notes;
+import robutev3.core.SoundFile;
 
 /**
  */
@@ -41,6 +44,9 @@ public class SoundFragment extends Fragment implements SeekBar.OnSeekBarChangeLi
     private Button buttonLa;
     private Button buttonTi;
     private Button buttonDo_P;
+
+    private Spinner soundFileSpinner;
+    private Button soundFileButton;
 
     static SoundFragment newInstance() {
         return new SoundFragment();
@@ -79,6 +85,9 @@ public class SoundFragment extends Fragment implements SeekBar.OnSeekBarChangeLi
         buttonTi = root.findViewById(R.id.buttonTi);
         buttonDo_P = root.findViewById(R.id.buttonDo_P);
 
+        soundFileSpinner = root.findViewById(R.id.spinnerSoundFile);
+        soundFileButton = root.findViewById(R.id.buttonPlayFile);
+
         return root;
     }
 
@@ -99,10 +108,14 @@ public class SoundFragment extends Fragment implements SeekBar.OnSeekBarChangeLi
         buttonSol.setOnClickListener(this);
         buttonLa.setOnClickListener(this);
         buttonTi.setOnClickListener(this);
+
+        final SoundFile [] allSoundFiles = SoundFile.values();
+        soundFileSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, allSoundFiles));
+        soundFileButton.setOnClickListener(v -> controlActivity.play(getSelectedSoundFile(), getVolume()));
     }
 
     private int getFrequency() {
-        return frequencySeekBar.getProgress() * 10 - 90;
+        return frequencySeekBar.getProgress() * 10 + 250;
     }
 
     private int getDuration() {
@@ -111,6 +124,10 @@ public class SoundFragment extends Fragment implements SeekBar.OnSeekBarChangeLi
 
     private int getVolume() {
         return volumeSeekBar.getProgress();
+    }
+
+    private SoundFile getSelectedSoundFile() {
+        return (SoundFile) soundFileSpinner.getSelectedItem();
     }
 
     @Override

@@ -31,7 +31,7 @@ import static robutev3.android.BluetoothCommunicationInterface.BLUETOOTH_OUI_LEG
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG = "robutev3";
+    public static final String TAG = "robutev3:demo:main";
 
     public static final String ACTION_USB_PERMISSION = "robut.USB_PERMISSION";
 
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         final PackageManager packageManager = getPackageManager();
         final boolean usbHost = packageManager.hasSystemFeature(FEATURE_USB_HOST);
-        Log.d("USB", "usbHost: " + usbHost);
+        Log.d(TAG, "usbHost: " + usbHost);
 
         updateDevices();
     }
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         final UsbAccessory [] usbAccessories = mUsbManager.getAccessoryList();
         if(usbAccessories != null) {
             for(final UsbAccessory usbAccessory : usbAccessories) {
-                Log.d("USB", String.format("usbAccessory : serial: %4s, model: %4s, manufacturer: %s, hasPermission: %b",
+                Log.d(TAG, String.format("usbAccessory : serial: %4s, model: %4s, manufacturer: %s, hasPermission: %b",
                         usbAccessory.getSerial(),
                         usbAccessory.getModel(),
                         usbAccessory.getManufacturer(),

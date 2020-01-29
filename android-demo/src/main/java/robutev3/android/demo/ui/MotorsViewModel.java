@@ -56,7 +56,7 @@ public class MotorsViewModel extends ViewModel {
         mMotorsMutableLiveData.setValue(mMotorsInfo);
     }
 
-    public class MotorsInfo implements Serializable {
+    public class MotorsInfo implements Serializable { // todo make Parcelable
 
         boolean lockedMotorsBandC = false;
         private int powerPortA = 0;

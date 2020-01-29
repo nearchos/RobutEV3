@@ -6,7 +6,7 @@ import java.io.IOException;
  * @author Nearchos
  * Created: 20-Dec-19
  */
-public interface IBrick {
+public interface IBrick { // todo delete?
 
     Motor motor();
 

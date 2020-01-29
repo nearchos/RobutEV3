@@ -46,7 +46,7 @@ public class USBCommunicationInterface implements CommunicationInterface {
 
     @Override
     public void connect() throws IOException {
-        usbDeviceConnection.claimInterface(usbInterface, true); // todo
+        usbDeviceConnection.claimInterface(usbInterface, true);
     }
 
     @Override

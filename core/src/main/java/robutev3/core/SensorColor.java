@@ -1,12 +1,19 @@
 package robutev3.core;
 
 /**
- * @author Nearchos
+ * @author Nearchos Paspallis [http://nearchos.github.io]
  * Created: 14-Dec-19
  */
 public class SensorColor {
 
-    public enum Mode implements Sensor.Mode { REFLECT, AMBIENT, COLOR }
+    public enum Mode implements Sensor.Mode {
+        /** Measures the amount of light reflected */
+        REFLECT,
+        /** Measures the amount of ambient light, i.e. with emitting LED off */
+        AMBIENT,
+        /** Detects the color of the object where the light is reflected */
+        COLOR
+    }
 
     private final Brick brick;
     private final PortSensor port;

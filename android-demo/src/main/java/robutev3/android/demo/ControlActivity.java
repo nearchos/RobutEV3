@@ -11,28 +11,40 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
+import robutev3.android.BrickService;
 import robutev3.android.Device;
 import robutev3.android.EV3Service;
+import robutev3.android.SensedValue;
 import robutev3.android.demo.ui.BrickInfoViewModel;
+import robutev3.android.demo.ui.Distance;
 import robutev3.android.demo.ui.MotorsViewModel;
 import robutev3.android.demo.ui.SectionsPagerAdapter;
-import robutev3.core.IBrick;
-import robutev3.core.PortMotor;
+import robutev3.android.demo.ui.UltrasonicViewModel;
+import robutev3.core.PortSensor;
+import robutev3.core.Sensor;
+import robutev3.core.SensorUltrasonic;
+import robutev3.core.SoundFile;
 
 public class ControlActivity extends AppCompatActivity {
 
-    public static final String TAG = "robutev3:demo";
+    public static final String TAG = "robutev3:demo:control";
+
+    private ViewPager viewPager;
 
     private BrickInfoViewModel brickInfoViewModel;
     private MotorsViewModel motorsViewModel;
+    private UltrasonicViewModel ultrasonicViewModel;
 
-    private IBrick brick;
+    private BrickService brickService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +52,14 @@ public class ControlActivity extends AppCompatActivity {
         setContentView(R.layout.activity_control);
 
         final SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        final ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         final TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
         brickInfoViewModel = ViewModelProviders.of(this).get(BrickInfoViewModel.class);
         motorsViewModel = ViewModelProviders.of(this).get(MotorsViewModel.class);
+        ultrasonicViewModel = ViewModelProviders.of(this).get(UltrasonicViewModel.class);
 
         registerToEv3Events();
     }
@@ -55,7 +68,7 @@ public class ControlActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         // Get Device parameter
-        final Device device = (Device) getIntent().getSerializableExtra(Device.EXTRA_DEVICE);
+        final Device device = (Device) getIntent().getParcelableExtra(Device.EXTRA_DEVICE);
         assert device != null;
         Toast.makeText(this, "Starting EV3 service ...", Toast.LENGTH_SHORT).show();
         // Bind to EV3Service - start on a separate thread as this is a slow operation
@@ -76,9 +89,9 @@ public class ControlActivity extends AppCompatActivity {
             if(motorsInfo.getPowerPortA() != powerPortA) {
                 powerPortA = motorsInfo.getPowerPortA();
                 if(powerPortA == 0) {
-                    brick.motor().portA().stop().coast().go();
+                    brickService.brick().motor().portA().stop().coast().go();
                 } else {
-                    brick.motor().portA().turnIndefinitely(powerPortA).go();
+                    brickService.brick().motor().portA().turnIndefinitely(powerPortA).go();
                 }
             }
 
@@ -86,27 +99,27 @@ public class ControlActivity extends AppCompatActivity {
                 if(motorsInfo.getPowerPortB() != powerPortB) {
                     powerPortB = powerPortC = motorsInfo.getPowerPortB();
                     if(powerPortB == 0) {
-                        brick.motor().portsBandC().stop().coast().go();
+                        brickService.brick().motor().portsBandC().stop().coast().go();
                     } else {
-                        brick.motor().portsBandC().turnIndefinitely(powerPortB);
+                        brickService.brick().motor().portsBandC().turnIndefinitely(powerPortB);
                     }
                 }
             } else {
                 if(motorsInfo.getPowerPortB() != powerPortB) {
                     powerPortB = motorsInfo.getPowerPortB();
                     if(powerPortB == 0) {
-                        brick.motor().portB().stop().coast().go();
+                        brickService.brick().motor().portB().stop().coast().go();
                     } else {
-                        brick.motor().portB().turnIndefinitely(powerPortB).go();
+                        brickService.brick().motor().portB().turnIndefinitely(powerPortB).go();
                     }
                 }
 
                 if(motorsInfo.getPowerPortC() != powerPortC) {
                     powerPortC = motorsInfo.getPowerPortC();
                     if(powerPortC == 0) {
-                        brick.motor().portC().stop().coast().go();
+                        brickService.brick().motor().portC().stop().coast().go();
                     } else {
-                        brick.motor().portC().turnIndefinitely(powerPortC).go();
+                        brickService.brick().motor().portC().turnIndefinitely(powerPortC).go();
                     }
                 }
             }
@@ -114,9 +127,9 @@ public class ControlActivity extends AppCompatActivity {
             if(motorsInfo.getPowerPortD() != powerPortD) {
                 powerPortD = motorsInfo.getPowerPortD();
                 if(powerPortD == 0) {
-                    brick.motor().portD().stop().coast().go();
+                    brickService.brick().motor().portD().stop().coast().go();
                 } else {
-                    brick.motor().portD().turnIndefinitely(powerPortD).go();
+                    brickService.brick().motor().portD().turnIndefinitely(powerPortD).go();
                 }
             }
         });
@@ -127,9 +140,9 @@ public class ControlActivity extends AppCompatActivity {
         super.onStop();
 
         // Stop motors is running
-        if(brick != null) {
+        if(brickService != null) {
             Log.d(TAG, "Stopping all motors");
-            brick.motor().stopAll().coast().go();
+            brickService.brick().motor().stopAll().coast().go();
         }
         // Unbind from EV3Service
         unbindService(connection);
@@ -137,11 +150,59 @@ public class ControlActivity extends AppCompatActivity {
     }
 
     public void beep() {
-        brick.sound().beep();
+        brickService.brick().sound().beep();
     }
 
     public void play(final int frequency, final int duration, final int volume) {
-        brick.sound().beep(frequency, duration, volume);
+        brickService.brick().sound().beep(frequency, duration, volume);
+    }
+
+    public void play(final SoundFile soundFile, final int volume) {
+        brickService.brick().sound().play(soundFile, volume);
+    }
+
+    public void poll(final PortSensor portSensor, final Sensor.Type sensorType, final Sensor.Mode sensorMode) {
+        switch (sensorType) {
+            case TOUCH:
+                throw new RuntimeException("Operation not implemented"); // todo
+            case COLOR:
+                throw new RuntimeException("Operation not implemented"); // todo
+            case ULTRASONIC:
+                {
+                    final SensorUltrasonic.DistanceSensible distanceSensible = brickService.brick().sensor().port(portSensor).ultrasonic();
+                    if(sensorMode == SensorUltrasonic.Mode.DISTANCE_CENTIMETERS) {
+                        final int distanceInCm = distanceSensible.centimeters();
+                        Log.d(TAG, "ultrasonic - distanceInCm: " + distanceInCm);
+                        ultrasonicViewModel.setDistance(distanceInCm, Distance.DistanceUnit.cm);
+                    } else if(sensorMode == SensorUltrasonic.Mode.DISTANCE_INCHES) {
+                        final int distanceInInches = distanceSensible.inches();
+                        Log.d(TAG, "ultrasonic - distanceInInches: " + distanceInInches);
+                        ultrasonicViewModel.setDistance(distanceInInches, Distance.DistanceUnit.in);
+                    } else if(sensorMode == SensorUltrasonic.Mode.LISTEN_ONLY) {
+                        // nothing for now
+                        Log.w(TAG, "Unsupported sensor mode: " + sensorMode);
+                    } else {
+                        throw new RuntimeException("Unknown sensor mode: " + sensorMode);
+                    }
+                }
+                break;
+            case INFRA_RED:
+                throw new RuntimeException("Operation not implemented"); // todo
+            default:
+                throw new RuntimeException("Unknown sensor type: " + sensorType);
+        }
+    }
+
+    public void listenToUltrasonic(final PortSensor portSensor, final UltrasonicViewModel ultrasonicViewModel) {
+        Snackbar.make(viewPager, getString(R.string.Listening_to_ultrasonic_at_port, portSensor.getName()), Snackbar.LENGTH_SHORT).show();
+        brickService.register(portSensor, Sensor.Type.ULTRASONIC, SensorUltrasonic.Mode.DISTANCE_CENTIMETERS);
+        // todo register ultrasonic view model for broadcasts
+    }
+
+    public void unlistenToUltrasonic(final PortSensor portSensor, final UltrasonicViewModel ultrasonicViewModel) {
+        Snackbar.make(viewPager, R.string.Stopped_listening_to_ultrasonic, Snackbar.LENGTH_SHORT).show();
+        brickService.unregister(portSensor, Sensor.Type.ULTRASONIC, SensorUltrasonic.Mode.DISTANCE_CENTIMETERS);
+        // todo unregister ultrasonic view model for broadcasts
     }
 
     /** Defines callbacks for service binding, passed to bindService() */
@@ -152,7 +213,7 @@ public class ControlActivity extends AppCompatActivity {
             Log.d(TAG, "EV3 Service connected");
             // We've bound to EV3Service, cast the IBinder and get EV3Service instance
             final EV3Service.EV3Binder binder = (EV3Service.EV3Binder) service;
-            brick = binder.getService();
+            brickService = binder.getService();
             brickInfoViewModel.setConnected();
         }
 
@@ -167,6 +228,8 @@ public class ControlActivity extends AppCompatActivity {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(EV3Service.EV3_ACTION_STARTED);
         intentFilter.addAction(EV3Service.EV3_ACTION_STOPPED);
+        intentFilter.addAction(EV3Service.EV3_SENSED_VALUES);
+        intentFilter.addAction(EV3Service.EV3_ERROR_DISCONNECTED);
         registerReceiver(ev3BroadcastReceiver, intentFilter);
     }
 
@@ -180,7 +243,32 @@ public class ControlActivity extends AppCompatActivity {
                     brickInfoViewModel.setStarted();
                     break;
                 case EV3Service.EV3_ACTION_STOPPED:
+                    Toast.makeText(context, R.string.Connection_broken, Toast.LENGTH_SHORT).show();
                     brickInfoViewModel.setStopped();
+                    break;
+                case EV3Service.EV3_SENSED_VALUES:
+                    final ArrayList<SensedValue> sensedValues = intent.getParcelableArrayListExtra(SensedValue.EXTRA_SENSED_VALUES);
+//                    Toast.makeText(context, "sensed values: " + sensedValue, Toast.LENGTH_SHORT).show();
+Log.d(TAG, "sensed values: " + sensedValues);//todo
+                    if(sensedValues != null) {
+                        for(final SensedValue sensedValue : sensedValues) {
+                            final Sensor.Type sensorType = sensedValue.getSensorType();
+                            final Sensor.Mode sensorMode = sensedValue.getSensorMode();
+                            final Bundle valuesBundle = sensedValue.getValues();
+                            if(SensorUltrasonic.Mode.DISTANCE_CENTIMETERS.name().equalsIgnoreCase(sensorMode.name())) {
+                                final int distanceInCentimeters = valuesBundle.getInt(SensorUltrasonic.VALUE_CENTIMETERS);
+                                ultrasonicViewModel.setDistance(distanceInCentimeters, Distance.DistanceUnit.cm);
+                            } else if(SensorUltrasonic.Mode.DISTANCE_INCHES.name().equalsIgnoreCase(sensorMode.name())) {
+                                final int distanceInInches = valuesBundle.getInt(SensorUltrasonic.VALUE_INCHES);
+                                ultrasonicViewModel.setDistance(distanceInInches, Distance.DistanceUnit.in);
+                            }
+                        }
+                    }
+                    break;
+                case EV3Service.EV3_ERROR_DISCONNECTED:
+                    Toast.makeText(context, R.string.Could_not_connect, Toast.LENGTH_SHORT).show();
+                    brickInfoViewModel.setStopped();
+                    finish();
                     break;
                 default:
                     // unknown action
