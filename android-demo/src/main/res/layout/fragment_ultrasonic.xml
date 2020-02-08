@@ -9,41 +9,163 @@
     tools:context=".ui.UltrasonicFragment">
 
     <TextView
-        android:id="@+id/ultrasonic_text_view"
-        android:text="@string/Distance_measured_by_ultrasonic"
+        android:id="@+id/ultrasonic_label_1"
+        android:padding="10dp"
+        android:text="@string/Select_a_port"
+        android:textSize="18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bordered_background_square"
+        app:layout_constraintTop_toBottomOf="@+id/ultrasonic_label_1">
+
+        <RadioButton
+            android:id="@+id/ultrasonic_radio_button_port_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/radio_button_selector"
+            android:button="@android:color/transparent"
+            android:checked="false"
+            android:gravity="center_horizontal"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:text="@string/Port_1" />
+
+        <RadioButton
+            android:id="@+id/ultrasonic_radio_button_port_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/radio_button_selector"
+            android:button="@android:color/transparent"
+            android:checked="false"
+            android:gravity="center_horizontal"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:text="@string/Port_2" />
+
+        <RadioButton
+            android:id="@+id/ultrasonic_radio_button_port_3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/radio_button_selector"
+            android:button="@android:color/transparent"
+            android:checked="false"
+            android:gravity="center_horizontal"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:text="@string/Port_3" />
+
+        <RadioButton
+            android:id="@+id/ultrasonic_radio_button_port_4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/radio_button_selector"
+            android:button="@android:color/transparent"
+            android:checked="true"
+            android:gravity="center_horizontal"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:text="@string/Port_4" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/ultrasonic_label_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/Select_mode"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bordered_background_square"
+        app:layout_constraintTop_toBottomOf="@+id/ultrasonic_label_2">
+
+        <RadioButton
+            android:id="@+id/ultrasonic_radio_button_mode_cm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/radio_button_selector"
+            android:button="@android:color/transparent"
+            android:checked="true"
+            android:gravity="center_horizontal"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:text="@string/Centimeters" />
+
+        <RadioButton
+            android:id="@+id/ultrasonic_radio_button_mode_in"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/radio_button_selector"
+            android:button="@android:color/transparent"
+            android:checked="true"
+            android:gravity="center_horizontal"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:text="@string/Inches" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/ultrasonic_text_view"
+        android:text="@string/Distance_measured_by_ultrasonic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center_horizontal"
+        android:background="@drawable/bordered_background"
+        android:padding="10dp"
+        android:maxLines="8"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
 
-    <Spinner
-        android:id="@+id/ultrasonic_port_selector_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/ultrasonic_text_view" />
-
     <Button
         android:id="@+id/ultrasonic_button_poll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:text="@string/Poll"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/ultrasonic_toggle_button_listen"
-        app:layout_constraintTop_toBottomOf="@id/ultrasonic_text_view" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <ToggleButton
         android:id="@+id/ultrasonic_toggle_button_listen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/Listen"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ultrasonic_button_poll"
-        app:layout_constraintTop_toBottomOf="@id/ultrasonic_text_view" />
+        android:layout_margin="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/Automatic_polling"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/ultrasonic_toggle_button_listen"
+        app:layout_constraintEnd_toStartOf="@+id/ultrasonic_toggle_button_listen"
+        app:layout_constraintTop_toTopOf="@+id/ultrasonic_toggle_button_listen" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,8 +25,14 @@
     <string name="Ultrasonic">Ultrasonic</string>
     <string name="Poll">Poll</string>
     <string name="Listen">Listen</string>
+    <string name="Automatic_polling">Automatic polling</string>
     <string name="Listening_to_ultrasonic_at_port">Listening to ultrasonic at port %1$s …</string>
     <string name="Stopped_listening_to_ultrasonic">Stopped listening to ultrasonic …</string>
+
+    <string name="Port_1">Port 1</string>
+    <string name="Port_2">Port 2</string>
+    <string name="Port_3">Port 3</string>
+    <string name="Port_4">Port 4</string>
 
     <string name="A">A</string>
     <string name="B">B</string>
@@ -46,13 +52,10 @@
     <string name="Ti">Ti</string>
     <string name="Do_P">Do\'</string>
 
+    <string name="Select_mode">Select mode</string>
+    <string name="Centimeters">Centimeters</string>
+    <string name="Inches">Inches</string>
+
     <string name="Select_a_port">Select a port</string>
-    <string-array name="SensorPortsArray">
-        <item>@string/Select_a_port</item>
-        <item>Port 1</item>
-        <item>Port 2</item>
-        <item>Port 3</item>
-        <item>Port 4</item>
-    </string-array>
 
 </resources>

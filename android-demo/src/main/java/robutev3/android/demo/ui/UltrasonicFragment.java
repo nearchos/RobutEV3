@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +30,10 @@ public class UltrasonicFragment extends Fragment {
 
     private UltrasonicViewModel ultrasonicViewModel;
 
-    private Spinner ultrasonicPortSelectorSpinner;
+    private RadioButton ultrasonicRadioButtonPort1;
+    private RadioButton ultrasonicRadioButtonPort2;
+    private RadioButton ultrasonicRadioButtonPort3;
+    private RadioButton ultrasonicRadioButtonPort4;
     private TextView ultrasonicTextView;
     private Button ultrasonicPollButton;
     private ToggleButton ultrasonicListenToggleButton;
@@ -51,44 +55,18 @@ public class UltrasonicFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_ultrasonic, container, false);
-        ultrasonicPortSelectorSpinner = root.findViewById(R.id.ultrasonic_port_selector_spinner);
+        ultrasonicRadioButtonPort1 = root.findViewById(R.id.ultrasonic_radio_button_port_1);
+        ultrasonicRadioButtonPort2 = root.findViewById(R.id.ultrasonic_radio_button_port_2);
+        ultrasonicRadioButtonPort3 = root.findViewById(R.id.ultrasonic_radio_button_port_3);
+        ultrasonicRadioButtonPort4 = root.findViewById(R.id.ultrasonic_radio_button_port_4);
         ultrasonicTextView = root.findViewById(R.id.ultrasonic_text_view);
         ultrasonicPollButton = root.findViewById(R.id.ultrasonic_button_poll);
         ultrasonicListenToggleButton = root.findViewById(R.id.ultrasonic_toggle_button_listen);
 
-        final String [] portOptions = getResources().getStringArray(R.array.SensorPortsArray);
-        ultrasonicPortSelectorSpinner.setAdapter(new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, portOptions));
-        ultrasonicPortSelectorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 1:
-                        portSensor = PortSensor.ONE;
-                        break;
-                    case 2:
-                        portSensor = PortSensor.TWO;
-                        break;
-                    case 3:
-                        portSensor = PortSensor.THREE;
-                        break;
-                    case 4:
-                        portSensor = PortSensor.FOUR;
-                        break;
-                    case 0:
-                    default:
-                        portSensor = null;
-                        Toast.makeText(requireContext(), R.string.Select_a_port, Toast.LENGTH_SHORT).show();
-                }
-                if(portSensor == null || !ultrasonicListenToggleButton.isChecked()) {
-                    controlActivity.unlistenToUltrasonic(portSensor, ultrasonicViewModel);
-                } else {
-                    controlActivity.listenToUltrasonic(portSensor, ultrasonicViewModel);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { /* not used */ }
-        });
+        ultrasonicRadioButtonPort1.setOnCheckedChangeListener((buttonView, isChecked) -> { if(isChecked) portSelectionChanged(); });
+        ultrasonicRadioButtonPort2.setOnCheckedChangeListener((buttonView, isChecked) -> { if(isChecked) portSelectionChanged(); });
+        ultrasonicRadioButtonPort3.setOnCheckedChangeListener((buttonView, isChecked) -> { if(isChecked) portSelectionChanged(); });
+        ultrasonicRadioButtonPort4.setOnCheckedChangeListener((buttonView, isChecked) -> { if(isChecked) portSelectionChanged(); });
 
         ultrasonicPollButton.setOnClickListener(v -> {
             if(portSensor == null) {
@@ -111,6 +89,25 @@ public class UltrasonicFragment extends Fragment {
         });
 
         return root;
+    }
+
+    private void portSelectionChanged() {
+        portSensor = null;
+        if(ultrasonicRadioButtonPort1.isChecked()) {
+            portSensor = PortSensor.ONE;
+        } else if(ultrasonicRadioButtonPort2.isChecked()) {
+            portSensor = PortSensor.TWO;
+        } else if(ultrasonicRadioButtonPort3.isChecked()) {
+            portSensor = PortSensor.THREE;
+        } else if(ultrasonicRadioButtonPort4.isChecked()) {
+            portSensor = PortSensor.FOUR;
+        }
+
+        if(portSensor == null || !ultrasonicListenToggleButton.isChecked()) {
+            controlActivity.unlistenToUltrasonic(portSensor, ultrasonicViewModel);
+        } else {
+            controlActivity.listenToUltrasonic(portSensor, ultrasonicViewModel);
+        }
     }
 
     private ControlActivity controlActivity = null;
