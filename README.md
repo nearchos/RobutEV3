@@ -30,5 +30,4 @@ The following sub-projects exist:
  to interface with EV3. Also it includes simple, command-line based
  demos of interfacing with EV3 using Java over Windows.
  
- [![Release](https://jitpack.io/v/User/Repo.svg)]
-(https://jitpack.io/#nearchos/RobutEV3)
+[![](https://jitpack.io/v/nearchos/RobutEV3.svg)](https://jitpack.io/#nearchos/RobutEV3)
