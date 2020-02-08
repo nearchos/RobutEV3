@@ -1,5 +1,7 @@
 # RobutEV3
 
+[![](https://jitpack.io/v/nearchos/RobutEV3.svg)](https://jitpack.io/#nearchos/RobutEV3)
+
 A Java-based interface for LEGO EV3 - with a custom Android API and demo
 apps for Android and Windows.
 
@@ -29,5 +31,3 @@ The following sub-projects exist:
  It includes USB and Bluetooth implementations of the connector needed
  to interface with EV3. Also it includes simple, command-line based
  demos of interfacing with EV3 using Java over Windows.
- 
-[![](https://jitpack.io/v/nearchos/RobutEV3.svg)](https://jitpack.io/#nearchos/RobutEV3)
