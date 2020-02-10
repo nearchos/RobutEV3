@@ -37,6 +37,10 @@ public class Brick implements IBrick {
         return new Motor(this);
     }
 
+    public Tank tank() {
+        return new Tank(this);
+    }
+
     public Sound sound() {
         return new Sound(this);
     }
@@ -96,6 +100,63 @@ public class Brick implements IBrick {
             Command c = new Command(Code.DIRECT_COMMAND_NO_REPLY);
             c.motorTimeAtSpeed(ports, speed, msRampUp, msContinueRun, msRampDown, brake);
             c.motorStartMotor(ports);
+            sendCommand(c);
+        } catch (IOException ioe) {
+            error(ioe);
+        }
+    }
+
+    void motorTankForward(final int speed) { // speed must be 1 to 100
+        try {
+            Command c = new Command(Code.DIRECT_COMMAND_NO_REPLY);
+            final byte ports = (byte) (PortMotor.B.getCode() | PortMotor.C.getCode());
+            c.motorTurnAtSpeed(ports, speed);
+            c.motorStartMotor(ports);
+            sendCommand(c);
+        } catch (IOException ioe) {
+            error(ioe);
+        }
+    }
+
+    void motorTankBackward(final int speed) { // speed must be 1 to 100
+        try {
+            Command c = new Command(Code.DIRECT_COMMAND_NO_REPLY);
+            final byte ports = (byte) (PortMotor.B.getCode() | PortMotor.C.getCode());
+            c.motorTurnAtSpeed(ports, -speed);
+            c.motorStartMotor(ports);
+            sendCommand(c);
+        } catch (IOException ioe) {
+            error(ioe);
+        }
+    }
+
+    void motorTankLeft(final int time) {
+        motorTankTurn(true, time);
+    }
+
+    void motorTankRight(final int time) {
+        motorTankTurn(false, time);
+    }
+
+    private void motorTankTurn(final boolean left, final int time) {
+        final int defaultSpeed= 50;
+        try {
+            Command c = new Command(Code.DIRECT_COMMAND_NO_REPLY);
+            c.motorTimeAtSpeed(PortMotor.B.getCode(), left ? -defaultSpeed : +defaultSpeed, 0, time, 0, true);
+            c.motorTimeAtSpeed(PortMotor.C.getCode(), left ? +defaultSpeed : -defaultSpeed, 0, time, 0, true);
+            final byte ports = (byte) (PortMotor.B.getCode() | PortMotor.C.getCode());
+            c.motorStartMotor(ports);
+            sendCommand(c);
+        } catch (IOException ioe) {
+            error(ioe);
+        }
+    }
+
+    void motorTankStop(final boolean brake) {
+        try {
+            Command c = new Command(Code.DIRECT_COMMAND_NO_REPLY);
+            final byte ports = (byte) (PortMotor.B.getCode() | PortMotor.C.getCode());
+            c.motorStopMotor(ports, brake);
             sendCommand(c);
         } catch (IOException ioe) {
             error(ioe);
@@ -163,9 +224,12 @@ warning("fullFilename: " + fullFilename); // todo
         synchronized (communicationInterface) {
             communicationInterface.write(command.byteCode());
             if (command.getCommandType() == Code.DIRECT_COMMAND_REPLY || command.getCommandType() == Code.SYSTEM_COMMAND_REPLY) {
+debug("...with reply: " + command);
                 final byte [] reply = waitForReply(command.getCommandType());
+                debug(reply);
                 return reply;
             } else {
+debug("...with no reply: " + command);
                 return new byte[] { (byte) command.getSequence() };
             }
         }
@@ -207,6 +271,7 @@ warning("fullFilename: " + fullFilename); // todo
     // Log system
 
     public interface LogListener {
+        void debug(String message);
         void warning(String message);
         void error(String message);
     }
@@ -221,9 +286,17 @@ warning("fullFilename: " + fullFilename); // todo
         return logListeners.remove(logListener);
     }
 
+    void debug(final String message) {
+        final Date date = new Date();
+        final String s = String.format(Locale.US, "[%tF %tT] Debug: %s", date, date, message);
+        for(final LogListener logListener : logListeners) {
+            logListener.debug(s);
+        }
+    }
+
     void warning(final String message) {
         final Date date = new Date();
-        final String s = String.format(Locale.US, "[%tF %tT] Warning: %s \n", date, date, message);
+        final String s = String.format(Locale.US, "[%tF %tT] Warning: %s", date, date, message);
         for(final LogListener logListener : logListeners) {
             logListener.warning(s);
         }
@@ -231,7 +304,7 @@ warning("fullFilename: " + fullFilename); // todo
 
     void error(final String message) {
         final Date date = new Date();
-        final String s = String.format(Locale.US, "[%tF %tT] Warning: %s \n", date, date, message);
+        final String s = String.format(Locale.US, "[%tF %tT] Error: %s", date, date, message);
         for(final LogListener logListener : logListeners) {
             logListener.error(s);
         }

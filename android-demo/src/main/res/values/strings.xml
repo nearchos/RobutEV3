@@ -21,6 +21,7 @@
     <string name="title_activity_control">ControlActivity</string>
     <string name="Brick_info">Brick info</string>
     <string name="Motors">Motors</string>
+    <string name="Tank">Tank</string>
     <string name="Sound">Sound</string>
     <string name="Ultrasonic">Ultrasonic</string>
     <string name="Poll">Poll</string>
@@ -57,5 +58,10 @@
     <string name="Inches">Inches</string>
 
     <string name="Select_a_port">Select a port</string>
+    <string name="Forward">Forward</string>
+    <string name="Backward">Backward</string>
+    <string name="Stop">Stop</string>
+    <string name="Left">Left</string>
+    <string name="Right">Right</string>
 
 </resources>

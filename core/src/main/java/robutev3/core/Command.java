@@ -7,11 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Inherited from J4EV3 - https://github.com/LLeddy/J4EV3/blob/master/J4EV3/src/com/j4ev3/core/Code.java
+ * Based on J4EV3
+ * https://github.com/LLeddy/J4EV3/blob/master/J4EV3/src/com/j4ev3/core/Command.java
  */
 class Command {
 
-	private static int sequence = 1;
+	private static int sequence = 0;
 
 	int getSequence() {
 		return sequence;
@@ -30,7 +31,7 @@ class Command {
 			throw new IllegalArgumentException("Global memory maximum size exceeded. 1019 bytes.");
 		if (localMemory > 63)
 			throw new IllegalArgumentException("Local memory maximum size exceeded. 63 bytes.");
-		ops = new ArrayList<Byte>();
+		ops = new ArrayList<>();
 		this.commandType = commandType;
 		// Temporary command length
 		ops.add((byte) 0xFF);
@@ -56,12 +57,12 @@ class Command {
 		return commandType;
 	}
 
-	void addByte(byte b) {
+	private void addByte(byte b) {
 		ops.add(b);
 	}
 
 	// Local Constant 1,2,4 bytes follow
-	void addLCX(int value) {
+	private void addLCX(int value) {
 		if (value >= -32 && value < 0) {
 			ops.add((byte) (0x3F & (value + 64)));
 		} else if (value >= 0 && value < 32) {
@@ -82,8 +83,8 @@ class Command {
 		}
 	}
 
-	// Local Constant string null-terminated
-	void addLCS(String value) {
+	// Local Constant String null-terminated
+	private void addLCS(String value) {
 		ops.add((byte) 0x84);
 		byte[] bytes = value.getBytes(Charset.forName("UTF-8"));
 		for (byte b : bytes)
@@ -92,7 +93,7 @@ class Command {
 	}
 
 	// Local Variable 1,2,4 bytes follow
-	void addLVX(int value) {
+	private void addLVX(int value) {
 		if (value < 0) {
 			throw new IllegalArgumentException("Parameter must be positive " + value);
 		} else if (value < 32) {
@@ -114,7 +115,7 @@ class Command {
 	}
 
 	// Global Variable 1,2,4 bytes follow
-	void addGVX(int value) {
+	private void addGVX(int value) {
 		if (value < 0) {
 			throw new IllegalArgumentException("Parameter must be positive " + value);
 		} else if (value < 32) {
@@ -134,7 +135,7 @@ class Command {
 			ops.add((byte) (value >> 24));
 		}
 	}
-	
+
 	byte [] byteCode() {
 		final ByteBuffer buffer = ByteBuffer.allocateDirect(ops.size());
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -485,5 +486,10 @@ class Command {
 	void genStopProgram(int prgId) {
 		addByte(Code.opProgram_Stop);
 		addLCX(prgId);
+	}
+
+	@Override
+	public String toString() {
+		return "#" + sequence + " : " + commandType + " -> " + ops;
 	}
 }

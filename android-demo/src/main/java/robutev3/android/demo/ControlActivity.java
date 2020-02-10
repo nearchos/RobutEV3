@@ -68,7 +68,7 @@ public class ControlActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         // Get Device parameter
-        final Device device = (Device) getIntent().getParcelableExtra(Device.EXTRA_DEVICE);
+        final Device device = getIntent().getParcelableExtra(Device.EXTRA_DEVICE);
         assert device != null;
         Toast.makeText(this, "Starting EV3 service ...", Toast.LENGTH_SHORT).show();
         // Bind to EV3Service - start on a separate thread as this is a slow operation
@@ -159,6 +159,30 @@ public class ControlActivity extends AppCompatActivity {
 
     public void play(final SoundFile soundFile, final int volume) {
         brickService.brick().sound().play(soundFile, volume);
+    }
+
+    public void tankForward() {
+        brickService.brick().motor().portsBandC().turnIndefinitely(20).go();
+    }
+
+    public void tankBackward() {
+        brickService.brick().motor().portsBandC().turnIndefinitely(-20).go();
+    }
+
+    public void tankStop() {
+        brickService.brick().motor().stopAll();
+    }
+
+    public void tankLeft() {
+        brickService.brick().motor().stopAll();
+        brickService.brick().motor().portB().turnDegrees(360, 20).brake();
+        brickService.brick().motor().portC().turnDegrees(360, -20).brake();
+    }
+
+    public void tankRight() {
+        brickService.brick().motor().stopAll();
+        brickService.brick().motor().portB().turnDegrees(360, -20).brake();
+        brickService.brick().motor().portC().turnDegrees(360, 20).brake();
     }
 
     public void poll(final PortSensor portSensor, final Sensor.Type sensorType, final Sensor.Mode sensorMode) {

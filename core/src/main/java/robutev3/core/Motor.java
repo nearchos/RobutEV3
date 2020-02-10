@@ -24,7 +24,7 @@ public class Motor {
     private int degrees = 0;
     private int time = 0;
 
-    public Motor(final Brick brick) {
+    Motor(final Brick brick) {
         this.brick = brick;
     }
 
@@ -90,12 +90,12 @@ public class Motor {
             actionType = ActionType.TURN_INDEFINITELY;
             // check bounds
             if(speed < -100) {
-                speed = -100;
                 brick.warning("Speed can not be < -100: " + speed);
+                speed = -100;
             }
             if(speed > +100) {
-                speed = +100;
                 brick.warning("Speed can not be > +100: " + speed);
+                speed = +100;
             }
             Motor.this.speed = speed;
 
@@ -110,23 +110,23 @@ public class Motor {
             actionType = ActionType.TURN_DEGREES;
             // check bounds
             if(degrees < -36000) {
-                System.err.println("Warning, degrees cannot exceed -36000. Setting value to -36000.");
+                brick.warning("Warning, degrees cannot exceed -36000. Setting value to -36000.");
                 degrees = -36000;
             }
             if(degrees > +36000) {
-                System.err.println("Warning, degrees cannot exceed +36000. Setting value to +36000.");
+                brick.warning("Warning, degrees cannot exceed +36000. Setting value to +36000.");
                 degrees = +36000;
             }
             Motor.this.degrees = degrees;
 
             // check bounds
             if(speed < -100) {
-                speed = -100;
                 brick.warning("Speed can not be < -100: " + speed);
+                speed = -100;
             }
             if(speed > +100) {
-                speed = +100;
                 brick.warning("Speed can not be > +100: " + speed);
+                speed = +100;
             }
             Motor.this.speed = speed;
 
@@ -141,19 +141,19 @@ public class Motor {
             actionType = ActionType.TURN_TIME;
             // check bounds
             if(time < 0) {
-                System.err.println("Warning, time cannot be < 0. Setting value to 0.");
+                brick.warning("Warning, time cannot be < 0. Setting value to 0.");
                 time = 0;
             }
             Motor.this.time = time;
 
             // check bounds
             if(speed < -100) {
-                speed = -100;
                 brick.warning("Speed can not be < -100: " + speed);
+                speed = -100;
             }
             if(speed > +100) {
-                speed = +100;
                 brick.warning("Speed can not be > +100: " + speed);
+                speed = +100;
             }
             Motor.this.speed = speed;
 

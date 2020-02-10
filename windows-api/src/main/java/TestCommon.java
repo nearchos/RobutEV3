@@ -18,6 +18,11 @@ public class TestCommon {
         // set warning/error listeners
         brick.addLogListener(new Brick.LogListener() {
             @Override
+            public void debug(String message) {
+                System.err.println("debug -> " + message);
+            }
+
+            @Override
             public void warning(String message) {
                 System.err.println("warning -> " + message);
             }
