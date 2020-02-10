@@ -105,6 +105,7 @@ public class EV3Service extends Service implements BrickService {
 
                 Log.d(TAG, "Brick adding listeners for warning and error messages ...");
                 brick.addLogListener(new Brick.LogListener() {
+                    @Override public void debug(String message) { Log.d(TAG, message); }
                     @Override public void warning(String message) { Log.w(TAG, message); }
                     @Override public void error(String message) { Log.e(TAG, message); }
                 });
