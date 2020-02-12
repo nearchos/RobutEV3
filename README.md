@@ -36,17 +36,18 @@ The following sub-projects exist:
 
 If needed, add jitpack at your root build.gradle at the end of repositories:
 
-```allprojects {
+```
+allprojects {
   repositories {
     ...
-      maven { url 'https://jitpack.io' }
-    }
+    maven { url 'https://jitpack.io' }
   }
+}
 ```
 
 Also, update your module Gradle to add the dependency:
 
-```gradle
+```
 dependencies {
   implementation 'com.github.nearchos:RobutEV3:0.0.4-alpha'
 }
