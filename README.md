@@ -36,7 +36,7 @@ The following sub-projects exist:
 
 If needed, add jitpack at your root build.gradle at the end of repositories:
 
-```
+```gradle
 allprojects {
   repositories {
     ...
@@ -47,7 +47,7 @@ allprojects {
 
 Also, update your module Gradle to add the dependency:
 
-```
+```gradle
 dependencies {
   implementation 'com.github.nearchos:RobutEV3:0.0.4-alpha'
 }
