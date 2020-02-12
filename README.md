@@ -36,13 +36,13 @@ The following sub-projects exist:
 
 If needed, add jitpack at your root build.gradle at the end of repositories:
 
-``allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
-	}
- ``
+```allprojects {
+  repositories {
+    ...
+      maven { url 'https://jitpack.io' }
+    }
+  }
+```
 
 Also, update your module Gradle to add the dependency:
 
