@@ -31,3 +31,23 @@ The following sub-projects exist:
  It includes USB and Bluetooth implementations of the connector needed
  to interface with EV3. Also it includes simple, command-line based
  demos of interfacing with EV3 using Java over Windows.
+
+### Download
+
+If needed, add jitpack at your root build.gradle at the end of repositories:
+
+``allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+ ``
+
+Also, update your module Gradle to add the dependency:
+
+```gradle
+dependencies {
+  implementation 'com.github.nearchos:RobutEV3:0.0.4-alpha'
+}
+```
