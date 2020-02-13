@@ -16,7 +16,8 @@ public class TestWindowsUSB {
         // see https://github.com/libusb/libusb/wiki/Windows#How_to_use_libusb_on_Windows
         final USBCommunicationInterface USBCommunicationInterface = new USBCommunicationInterface();
 
-        TestCommon.test(USBCommunicationInterface);
+//        TestCommon.test(USBCommunicationInterface);
+        TestCommon3.test(USBCommunicationInterface);
 
         System.exit(0);
     }
