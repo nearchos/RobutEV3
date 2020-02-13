@@ -116,18 +116,18 @@ public class Tank {
         return new Goable();
     }
 
-    public Goable turnRight(int time) { // timeInMilliseconds must be 0..2000
+    public Goable turnRight(final Interval interval) { // timeInMilliseconds must be 0..2000
         // check bounds
-        if(time < 0) {
-            brick.warning("Time can not be < 0: " + time);
-            time = 0;
+        if(interval.getMilliseconds() < 0) {
+            brick.warning("Time can not be < 0: " + interval);
+            this.timeInMilliseconds = 0;
         }
-        if(time > +2000) {
-            brick.warning("Time can not be > +2000: " + time);
-            time = 2000;
+        if(interval.getMilliseconds() > +2000) {
+            brick.warning("Time can not be > +2000: " + interval);
+            this.timeInMilliseconds = 2000;
         }
         Tank.this.actionType = ActionType.RIGHT;
-        this.timeInMilliseconds = time;
+        this.timeInMilliseconds = interval.getMilliseconds();
         return new Goable();
     }
 
