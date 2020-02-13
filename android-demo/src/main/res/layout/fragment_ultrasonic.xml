@@ -130,7 +130,7 @@
         android:text="@string/Distance_measured_by_ultrasonic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_margin="20dp"
         android:gravity="center_horizontal"
         android:background="@drawable/bordered_background"
         android:padding="10dp"

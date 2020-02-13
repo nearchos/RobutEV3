@@ -18,7 +18,7 @@ import robutev3.android.demo.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = { R.string.Brick_info, R.string.Sound, R.string.Motors, R.string.Tank, R.string.Ultrasonic };
+    private static final int [] TAB_TITLES = { R.string.Brick_info, R.string.Sound, R.string.Motors, R.string.Tank, R.string.Ultrasonic };
 
     private final Context mContext;
 

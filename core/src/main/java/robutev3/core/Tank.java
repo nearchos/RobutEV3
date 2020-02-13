@@ -26,6 +26,21 @@ public class Tank {
         return new Goable();
     }
 
+    public Goable forward(final Interval interval) { // interval must be 0..10000 ms
+        // check bounds
+        if(interval.getMilliseconds() < 0) {
+            brick.warning("Interval can not be < 0 ms: " + interval);
+            time = 0;
+        }
+        if(interval.getMilliseconds() > +10000) {
+            brick.warning("Interval can not be > +10000 ms: " + interval);
+            time = +10000;
+        }
+        Tank.this.actionType = ActionType.FORWARD;
+        Tank.this.time = interval.getMilliseconds();
+        return new Goable();
+    }
+
     public Goable forward(int speed) { // speed must be 0..100
         // check bounds
         if(speed < 0) {
@@ -43,6 +58,21 @@ public class Tank {
 
     public Goable backward() {
         Tank.this.actionType = ActionType.BACKWARD;
+        return new Goable();
+    }
+
+    public Goable backward(final Interval interval) { // interval must be 0..10000 ms
+        // check bounds
+        if(interval.getMilliseconds() < 0) {
+            brick.warning("Interval can not be < 0 ms: " + interval);
+            time = 0;
+        }
+        if(interval.getMilliseconds() > +10000) {
+            brick.warning("Interval can not be > +10000 ms: " + interval);
+            time = +10000;
+        }
+        Tank.this.actionType = ActionType.BACKWARD;
+        Tank.this.time = interval.getMilliseconds();
         return new Goable();
     }
 

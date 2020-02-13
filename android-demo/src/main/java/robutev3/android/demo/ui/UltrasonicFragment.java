@@ -1,14 +1,12 @@
 package robutev3.android.demo.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -27,6 +25,8 @@ import robutev3.core.SensorUltrasonic;
 /**
  */
 public class UltrasonicFragment extends Fragment {
+
+    public static final String TAG = "robutev3:demo:main";
 
     private UltrasonicViewModel ultrasonicViewModel;
 
@@ -63,15 +63,21 @@ public class UltrasonicFragment extends Fragment {
         ultrasonicPollButton = root.findViewById(R.id.ultrasonic_button_poll);
         ultrasonicListenToggleButton = root.findViewById(R.id.ultrasonic_toggle_button_listen);
 
-        ultrasonicRadioButtonPort1.setOnCheckedChangeListener((buttonView, isChecked) -> { if(isChecked) portSelectionChanged(); });
-        ultrasonicRadioButtonPort2.setOnCheckedChangeListener((buttonView, isChecked) -> { if(isChecked) portSelectionChanged(); });
-        ultrasonicRadioButtonPort3.setOnCheckedChangeListener((buttonView, isChecked) -> { if(isChecked) portSelectionChanged(); });
-        ultrasonicRadioButtonPort4.setOnCheckedChangeListener((buttonView, isChecked) -> { if(isChecked) portSelectionChanged(); });
+        ultrasonicRadioButtonPort1.setOnCheckedChangeListener((buttonView, isChecked) -> { if(isChecked) portSelectionChanged(PortSensor.ONE); });
+        ultrasonicRadioButtonPort2.setOnCheckedChangeListener((buttonView, isChecked) -> { if(isChecked) portSelectionChanged(PortSensor.TWO); });
+        ultrasonicRadioButtonPort3.setOnCheckedChangeListener((buttonView, isChecked) -> { if(isChecked) portSelectionChanged(PortSensor.THREE); });
+        ultrasonicRadioButtonPort4.setOnCheckedChangeListener((buttonView, isChecked) -> { if(isChecked) portSelectionChanged(PortSensor.FOUR); });
+
+        if(ultrasonicRadioButtonPort1.isChecked()) portSensor = PortSensor.ONE;
+        else if(ultrasonicRadioButtonPort2.isChecked()) portSensor = PortSensor.TWO;
+        else if(ultrasonicRadioButtonPort3.isChecked()) portSensor = PortSensor.THREE;
+        else if(ultrasonicRadioButtonPort4.isChecked()) portSensor = PortSensor.FOUR;
 
         ultrasonicPollButton.setOnClickListener(v -> {
             if(portSensor == null) {
                 Toast.makeText(getActivity(), R.string.Select_a_port, Toast.LENGTH_SHORT).show();
             } else {
+                Log.d(TAG, "Polling ultrasonic sensor at port: " + portSensor);
                 controlActivity.poll(portSensor, Sensor.Type.ULTRASONIC, SensorUltrasonic.Mode.DISTANCE_CENTIMETERS);
             }
         });
@@ -84,28 +90,24 @@ public class UltrasonicFragment extends Fragment {
             }
         });
 
-        ultrasonicViewModel.getUltrasonicDistance().observe(this, ultrasonicDistance -> {
+        ultrasonicViewModel.getUltrasonicDistance().observe(getViewLifecycleOwner(), ultrasonicDistance -> {
             ultrasonicTextView.setText(getString(R.string.Ultrasonic_distance, ultrasonicDistance.getDistance(), ultrasonicDistance.getDistanceUnit().name()));
         });
 
         return root;
     }
 
-    private void portSelectionChanged() {
-        portSensor = null;
-        if(ultrasonicRadioButtonPort1.isChecked()) {
-            portSensor = PortSensor.ONE;
-        } else if(ultrasonicRadioButtonPort2.isChecked()) {
-            portSensor = PortSensor.TWO;
-        } else if(ultrasonicRadioButtonPort3.isChecked()) {
-            portSensor = PortSensor.THREE;
-        } else if(ultrasonicRadioButtonPort4.isChecked()) {
-            portSensor = PortSensor.FOUR;
-        }
+    private void portSelectionChanged(final PortSensor portSensor) {
+        final PortSensor oldPortSensor = this.portSensor;
+        this.portSensor = portSensor;
+        Log.d(TAG, "Switching ultrasonic sensor from port: " + oldPortSensor + " to: " + portSensor);
 
-        if(portSensor == null || !ultrasonicListenToggleButton.isChecked()) {
-            controlActivity.unlistenToUltrasonic(portSensor, ultrasonicViewModel);
-        } else {
+        if(oldPortSensor != null && !ultrasonicListenToggleButton.isChecked()) {
+            Log.d(TAG, "unlistenToUltrasonic at port: " + oldPortSensor);
+            controlActivity.unlistenToUltrasonic(oldPortSensor, ultrasonicViewModel);
+        }
+        if(portSensor != null && ultrasonicListenToggleButton.isChecked()){
+            Log.d(TAG, "listenToUltrasonic at port: " + portSensor);
             controlActivity.listenToUltrasonic(portSensor, ultrasonicViewModel);
         }
     }

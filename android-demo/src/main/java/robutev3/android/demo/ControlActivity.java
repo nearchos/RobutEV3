@@ -29,6 +29,7 @@ import robutev3.android.demo.ui.Distance;
 import robutev3.android.demo.ui.MotorsViewModel;
 import robutev3.android.demo.ui.SectionsPagerAdapter;
 import robutev3.android.demo.ui.UltrasonicViewModel;
+import robutev3.core.Interval;
 import robutev3.core.PortSensor;
 import robutev3.core.Sensor;
 import robutev3.core.SensorUltrasonic;
@@ -162,27 +163,31 @@ public class ControlActivity extends AppCompatActivity {
     }
 
     public void tankForward() {
-        brickService.brick().motor().portsBandC().turnIndefinitely(20).go();
+//        brickService.brick().motor().portsBandC().turnIndefinitely(20).go();
+        brickService.brick().tank().forward(Interval.seconds(1)).go();
     }
 
     public void tankBackward() {
-        brickService.brick().motor().portsBandC().turnIndefinitely(-20).go();
+//        brickService.brick().motor().portsBandC().turnIndefinitely(-20).go();
+        brickService.brick().tank().backward(Interval.seconds(1)).go();
     }
 
     public void tankStop() {
-        brickService.brick().motor().stopAll();
+        brickService.brick().motor().stopAll().coast().go();
     }
 
     public void tankLeft() {
-        brickService.brick().motor().stopAll();
-        brickService.brick().motor().portB().turnDegrees(360, 20).brake();
-        brickService.brick().motor().portC().turnDegrees(360, -20).brake();
+//        brickService.brick().motor().stopAll();
+//        brickService.brick().motor().portB().turnDegrees(360, 20).brake().go();
+//        brickService.brick().motor().portC().turnDegrees(360, -20).brake().go();
+        brickService.brick().tank().turnLeft().go();
     }
 
     public void tankRight() {
-        brickService.brick().motor().stopAll();
-        brickService.brick().motor().portB().turnDegrees(360, -20).brake();
-        brickService.brick().motor().portC().turnDegrees(360, 20).brake();
+//        brickService.brick().motor().stopAll();
+//        brickService.brick().motor().portB().turnDegrees(360, -20).brake().go();
+//        brickService.brick().motor().portC().turnDegrees(360, 20).brake().go();
+        brickService.brick().tank().turnRight().go();
     }
 
     public void poll(final PortSensor portSensor, final Sensor.Type sensorType, final Sensor.Mode sensorMode) {
