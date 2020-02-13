@@ -118,11 +118,35 @@ public class Brick implements IBrick {
         }
     }
 
+    void motorTankForward(final int speed, final int time, final Motor.StopMode stopMode) { // speed must be 1 to 100
+        try {
+            Command c = new Command(Code.DIRECT_COMMAND_NO_REPLY);
+            final byte ports = (byte) (PortMotor.B.getCode() | PortMotor.C.getCode());
+            c.motorTimeAtSpeed(ports, speed, 0, time, 0, stopMode == Motor.StopMode.BRAKE);
+            c.motorStartMotor(ports);
+            sendCommand(c);
+        } catch (IOException ioe) {
+            error(ioe);
+        }
+    }
+
     void motorTankBackward(final int speed) { // speed must be 1 to 100
         try {
             Command c = new Command(Code.DIRECT_COMMAND_NO_REPLY);
             final byte ports = (byte) (PortMotor.B.getCode() | PortMotor.C.getCode());
             c.motorTurnAtSpeed(ports, -speed);
+            c.motorStartMotor(ports);
+            sendCommand(c);
+        } catch (IOException ioe) {
+            error(ioe);
+        }
+    }
+
+    void motorTankBackward(final int speed, final int time, final Motor.StopMode stopMode) { // speed must be 1 to 100
+        try {
+            Command c = new Command(Code.DIRECT_COMMAND_NO_REPLY);
+            final byte ports = (byte) (PortMotor.B.getCode() | PortMotor.C.getCode());
+            c.motorTimeAtSpeed(ports, -speed, 0, time, 0, stopMode == Motor.StopMode.BRAKE);
             c.motorStartMotor(ports);
             sendCommand(c);
         } catch (IOException ioe) {

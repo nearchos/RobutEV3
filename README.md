@@ -49,6 +49,6 @@ Also, update your module Gradle to add the dependency:
 
 ```gradle
 dependencies {
-  implementation 'com.github.nearchos:RobutEV3:0.0.5-alpha'
+  implementation 'com.github.nearchos:RobutEV3:0.0.6-alpha'
 }
 ```

@@ -6,16 +6,16 @@ package robutev3.core;
  */
 public class Tank {
 
-    public static final int DEFAULT_TIME = 400;
-    public static final int DEFAULT_SPEED = 50;
+    private static final int DEFAULT_TIME = 438;
+    private static final int DEFAULT_SPEED = 50;
 
-    public enum ActionType { FORWARD, BACKWARD, LEFT, RIGHT, STOP }
+    public enum ActionType { FORWARD, FORWARD_TIME, BACKWARD, BACKWARD_TIME, LEFT, RIGHT, STOP }
 
     private final Brick brick;
 
     private ActionType actionType;
 
-    private int time = DEFAULT_TIME;
+    private int timeInMilliseconds = DEFAULT_TIME;
     private int speed = DEFAULT_SPEED;
     private Motor.StopMode stopMode = Motor.StopMode.COAST;
 
@@ -30,14 +30,14 @@ public class Tank {
         // check bounds
         if(interval.getMilliseconds() < 0) {
             brick.warning("Interval can not be < 0 ms: " + interval);
-            time = 0;
+            timeInMilliseconds = 0;
         }
         if(interval.getMilliseconds() > +10000) {
             brick.warning("Interval can not be > +10000 ms: " + interval);
-            time = +10000;
+            timeInMilliseconds = +10000;
         }
-        Tank.this.actionType = ActionType.FORWARD;
-        Tank.this.time = interval.getMilliseconds();
+        Tank.this.actionType = ActionType.FORWARD_TIME;
+        Tank.this.timeInMilliseconds = interval.getMilliseconds();
         return new Goable();
     }
 
@@ -65,14 +65,14 @@ public class Tank {
         // check bounds
         if(interval.getMilliseconds() < 0) {
             brick.warning("Interval can not be < 0 ms: " + interval);
-            time = 0;
+            timeInMilliseconds = 0;
         }
         if(interval.getMilliseconds() > +10000) {
             brick.warning("Interval can not be > +10000 ms: " + interval);
-            time = +10000;
+            timeInMilliseconds = +10000;
         }
-        Tank.this.actionType = ActionType.BACKWARD;
-        Tank.this.time = interval.getMilliseconds();
+        Tank.this.actionType = ActionType.BACKWARD_TIME;
+        Tank.this.timeInMilliseconds = interval.getMilliseconds();
         return new Goable();
     }
 
@@ -96,18 +96,18 @@ public class Tank {
         return new Goable();
     }
 
-    public Goable turnLeft(int time) { // time must be 0..2000
+    public Goable turnLeft(final Interval interval) { // timeInMilliseconds must be 0..2000
         // check bounds
-        if(time < 0) {
-            brick.warning("Time can not be < 0: " + time);
-            time = 0;
+        if(interval.getMilliseconds() < 0) {
+            brick.warning("Time can not be < 0: " + interval);
+            this.timeInMilliseconds = 0;
         }
-        if(time > +2000) {
-            brick.warning("Time can not be > +2000: " + time);
-            time = 2000;
+        if(interval.getMilliseconds() > +2000) {
+            brick.warning("Time can not be > +2000: " + interval);
+            this.timeInMilliseconds = 2000;
         }
         Tank.this.actionType = ActionType.LEFT;
-        this.time = time;
+        this.timeInMilliseconds = interval.getMilliseconds();
         return new Goable();
     }
 
@@ -116,7 +116,7 @@ public class Tank {
         return new Goable();
     }
 
-    public Goable turnRight(int time) { // time must be 0..2000
+    public Goable turnRight(int time) { // timeInMilliseconds must be 0..2000
         // check bounds
         if(time < 0) {
             brick.warning("Time can not be < 0: " + time);
@@ -127,7 +127,7 @@ public class Tank {
             time = 2000;
         }
         Tank.this.actionType = ActionType.RIGHT;
-        this.time = time;
+        this.timeInMilliseconds = time;
         return new Goable();
     }
 
@@ -156,14 +156,20 @@ public class Tank {
                 case FORWARD:
                     brick.motorTankForward(speed);
                     break;
+                case FORWARD_TIME:
+                    brick.motorTankForward(speed, timeInMilliseconds, stopMode);
+                    break;
                 case BACKWARD:
                     brick.motorTankBackward(speed);
                     break;
+                case BACKWARD_TIME:
+                    brick.motorTankBackward(speed, timeInMilliseconds, stopMode);
+                    break;
                 case LEFT:
-                    brick.motorTankLeft(time);
+                    brick.motorTankLeft(timeInMilliseconds);
                     break;
                 case RIGHT:
-                    brick.motorTankRight(time);
+                    brick.motorTankRight(timeInMilliseconds);
                     break;
                 case STOP:
                     brick.motorTankStop(stopMode == Motor.StopMode.BRAKE);
