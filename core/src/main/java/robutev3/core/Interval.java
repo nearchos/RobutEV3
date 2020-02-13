@@ -6,6 +6,8 @@ package robutev3.core;
  */
 public class Interval {
 
+    public static final int MIN = 0;
+
     private final int milliseconds;
 
     private Interval(final int milliseconds) {
