@@ -13,10 +13,13 @@
     <string name="Starting">Starting …</string>
     <string name="Could_not_connect">Could not connect</string>
     <string name="Connection_broken">Connection broken</string>
+    <string name="Failed">Failed</string>
     <string name="Beep">Beep</string>
     <string name="Play">Play</string>
     <string name="Distance_measured_by_ultrasonic">Distance measured by ultrasonic …</string>
     <string name="Ultrasonic_distance">Ultrasonic distance: %1$d %2$s</string>
+    <string name="Color_sensed_by_color_sensor">Color sensed by color sensor …</string>
+    <string name="Color_sensed">Color sensed: %1$s</string>
 
     <string name="title_activity_control">ControlActivity</string>
     <string name="Brick_info">Brick info</string>
@@ -29,6 +32,8 @@
     <string name="Automatic_polling">Automatic polling</string>
     <string name="Listening_to_ultrasonic_at_port">Listening to ultrasonic at port %1$s …</string>
     <string name="Stopped_listening_to_ultrasonic">Stopped listening to ultrasonic …</string>
+    <string name="Listening_to_color_at_port">Listening to color at port %1$s …</string>
+    <string name="Stopped_listening_to_color">Stopped listening to color …</string>
 
     <string name="Port_1">Port 1</string>
     <string name="Port_2">Port 2</string>
@@ -56,6 +61,9 @@
     <string name="Select_mode">Select mode</string>
     <string name="Centimeters">Centimeters</string>
     <string name="Inches">Inches</string>
+    <string name="Color">Color</string>
+    <string name="Reflected_light">Reflected light</string>
+    <string name="Ambient_light">Ambient light</string>
 
     <string name="Select_a_port">Select a port</string>
     <string name="Forward">Forward</string>

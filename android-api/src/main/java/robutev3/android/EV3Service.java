@@ -27,8 +27,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import robutev3.core.Brick;
+import robutev3.core.Color;
 import robutev3.core.PortSensor;
 import robutev3.core.Sensor;
+import robutev3.core.SensorColor;
 import robutev3.core.SensorUltrasonic;
 
 public class EV3Service extends Service implements BrickService {
@@ -212,28 +214,48 @@ Log.d(TAG, "synchronizedPollingTaskSet: " + synchronizedPollingTaskSet);//todo d
             switch (sensorType) {
                 case TOUCH:
                     //todo
+                    {
+
+                    }
                     break;
                 case COLOR:
-                    //todo
+                    {
+                        final Bundle bundle = new Bundle(1);
+                        if(SensorColor.Mode.COLOR == sensorMode) {
+                            final Color polledValue = brick.sensor().port(pollingTask.portSensor).color().sense();
+                            bundle.putSerializable(SensorColor.VALUE_COLOR, polledValue);
+                        } else if(SensorColor.Mode.REFLECT == sensorMode || SensorColor.Mode.AMBIENT == sensorMode) {
+                            final int polledValue = brick.sensor().port(pollingTask.portSensor).color().senseRaw();
+                            bundle.putInt(SensorColor.VALUE_LIGHT_INTENSITY, polledValue);
+                        } else {
+                            Log.w(TAG, "Unknown MODE for sensor: " + Sensor.Type.COLOR);
+                        }
+                        sensedValues.add(new SensedValue(Sensor.Type.COLOR, pollingTask.sensorMode, bundle));
+                    }
                     break;
                 case INFRA_RED:
                     //todo
+                    {
+
+                    }
                     break;
                 case ULTRASONIC:
-                    final int polledValue = brick.sensor().port(pollingTask.portSensor).ultrasonic().mode(pollingTask.sensorMode.name());
-                    final Bundle bundle = new Bundle(1);
-                    if(SensorUltrasonic.Mode.DISTANCE_CENTIMETERS.name().equalsIgnoreCase(sensorMode.name())) {
-                        bundle.putInt(SensorUltrasonic.VALUE_CENTIMETERS, polledValue);
-                    } else if(SensorUltrasonic.Mode.DISTANCE_INCHES.name().equalsIgnoreCase(sensorMode.name())) {
-                        bundle.putInt(SensorUltrasonic.VALUE_INCHES, polledValue);
-                    } else if(SensorUltrasonic.Mode.LISTEN_ONLY.name().equalsIgnoreCase(sensorMode.name())) {
-                        // todo implement - skip for now
-                        Log.i(TAG, "Not implemented for MODE: " + SensorUltrasonic.Mode.LISTEN_ONLY);
-                    } else {
-                        Log.w(TAG, "Unknown MODE for sensor: " + Sensor.Type.ULTRASONIC);
+                    {
+                        final int polledValue = brick.sensor().port(pollingTask.portSensor).ultrasonic().mode(pollingTask.sensorMode.name());
+                        final Bundle bundle = new Bundle(1);
+                        if(SensorUltrasonic.Mode.DISTANCE_CENTIMETERS == sensorMode) {
+                            bundle.putInt(SensorUltrasonic.VALUE_CENTIMETERS, polledValue);
+                        } else if(SensorUltrasonic.Mode.DISTANCE_INCHES == sensorMode) {
+                            bundle.putInt(SensorUltrasonic.VALUE_INCHES, polledValue);
+                        } else if(SensorUltrasonic.Mode.LISTEN_ONLY == sensorMode) {
+                            // todo must implement - skip for now
+                            Log.i(TAG, "Not implemented for MODE: " + SensorUltrasonic.Mode.LISTEN_ONLY);
+                        } else {
+                            Log.w(TAG, "Unknown MODE for sensor: " + Sensor.Type.ULTRASONIC);
+                        }
+                        bundle.putInt("value", polledValue);
+                        sensedValues.add(new SensedValue(Sensor.Type.ULTRASONIC, pollingTask.sensorMode, bundle));
                     }
-                    bundle.putInt("value", polledValue);
-                    sensedValues.add(new SensedValue(Sensor.Type.ULTRASONIC, pollingTask.sensorMode, bundle));
                     break;
                 default: throw new UnsupportedOperationException();
             }
