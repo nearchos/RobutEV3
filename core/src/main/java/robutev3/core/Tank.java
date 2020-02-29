@@ -104,6 +104,22 @@ public class Tank {
         return new Goable();
     }
 
+    public Goable turnLeft(final Speed speed, final Interval interval) { // timeInMilliseconds must be 0..2000
+        // check bounds
+        if(interval.getMilliseconds() < 0) {
+            brick.warning("Time can not be < 0: " + interval);
+            this.timeInMilliseconds = 0;
+        }
+        if(interval.getMilliseconds() > +2000) {
+            brick.warning("Time can not be > +2000: " + interval);
+            this.timeInMilliseconds = 2000;
+        }
+        Tank.this.actionType = ActionType.LEFT;
+        this.speed = speed.getValue();
+        this.timeInMilliseconds = interval.getMilliseconds();
+        return new Goable();
+    }
+
     public Goable turnRight() {
         Tank.this.actionType = ActionType.RIGHT;
         return new Goable();
@@ -120,6 +136,22 @@ public class Tank {
             this.timeInMilliseconds = 2000;
         }
         Tank.this.actionType = ActionType.RIGHT;
+        this.timeInMilliseconds = interval.getMilliseconds();
+        return new Goable();
+    }
+
+    public Goable turnRight(final Speed speed, final Interval interval) { // timeInMilliseconds must be 0..2000
+        // check bounds
+        if(interval.getMilliseconds() < 0) {
+            brick.warning("Time can not be < 0: " + interval);
+            this.timeInMilliseconds = 0;
+        }
+        if(interval.getMilliseconds() > +2000) {
+            brick.warning("Time can not be > +2000: " + interval);
+            this.timeInMilliseconds = 2000;
+        }
+        Tank.this.actionType = ActionType.RIGHT;
+        this.speed = speed.getValue();
         this.timeInMilliseconds = interval.getMilliseconds();
         return new Goable();
     }
@@ -159,10 +191,10 @@ public class Tank {
                     brick.motorTankBackward(speed, timeInMilliseconds, stopMode);
                     break;
                 case LEFT:
-                    brick.motorTankLeft(timeInMilliseconds);
+                    brick.motorTankLeft(speed, timeInMilliseconds);
                     break;
                 case RIGHT:
-                    brick.motorTankRight(timeInMilliseconds);
+                    brick.motorTankRight(speed, timeInMilliseconds);
                     break;
                 case STOP:
                     brick.motorTankStop(stopMode == Motor.StopMode.BRAKE);
