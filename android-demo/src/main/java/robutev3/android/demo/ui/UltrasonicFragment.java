@@ -30,12 +30,6 @@ public class UltrasonicFragment extends Fragment {
 
     private UltrasonicViewModel ultrasonicViewModel;
 
-    private RadioButton ultrasonicRadioButtonPort1;
-    private RadioButton ultrasonicRadioButtonPort2;
-    private RadioButton ultrasonicRadioButtonPort3;
-    private RadioButton ultrasonicRadioButtonPort4;
-    private TextView ultrasonicTextView;
-    private Button ultrasonicPollButton;
     private ToggleButton ultrasonicListenToggleButton;
 
     static UltrasonicFragment newInstance() {
@@ -55,13 +49,10 @@ public class UltrasonicFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_ultrasonic, container, false);
-        ultrasonicRadioButtonPort1 = root.findViewById(R.id.ultrasonic_radio_button_port_1);
-        ultrasonicRadioButtonPort2 = root.findViewById(R.id.ultrasonic_radio_button_port_2);
-        ultrasonicRadioButtonPort3 = root.findViewById(R.id.ultrasonic_radio_button_port_3);
-        ultrasonicRadioButtonPort4 = root.findViewById(R.id.ultrasonic_radio_button_port_4);
-        ultrasonicTextView = root.findViewById(R.id.ultrasonic_text_view);
-        ultrasonicPollButton = root.findViewById(R.id.ultrasonic_button_poll);
-        ultrasonicListenToggleButton = root.findViewById(R.id.ultrasonic_toggle_button_listen);
+        final RadioButton ultrasonicRadioButtonPort1 = root.findViewById(R.id.ultrasonic_radio_button_port_1);
+        final RadioButton ultrasonicRadioButtonPort2 = root.findViewById(R.id.ultrasonic_radio_button_port_2);
+        final RadioButton ultrasonicRadioButtonPort3 = root.findViewById(R.id.ultrasonic_radio_button_port_3);
+        final RadioButton ultrasonicRadioButtonPort4 = root.findViewById(R.id.ultrasonic_radio_button_port_4);
 
         ultrasonicRadioButtonPort1.setOnCheckedChangeListener((buttonView, isChecked) -> { if(isChecked) portSelectionChanged(PortSensor.ONE); });
         ultrasonicRadioButtonPort2.setOnCheckedChangeListener((buttonView, isChecked) -> { if(isChecked) portSelectionChanged(PortSensor.TWO); });
@@ -73,6 +64,7 @@ public class UltrasonicFragment extends Fragment {
         else if(ultrasonicRadioButtonPort3.isChecked()) portSensor = PortSensor.THREE;
         else if(ultrasonicRadioButtonPort4.isChecked()) portSensor = PortSensor.FOUR;
 
+        final Button ultrasonicPollButton = root.findViewById(R.id.ultrasonic_button_poll);
         ultrasonicPollButton.setOnClickListener(v -> {
             if(portSensor == null) {
                 Toast.makeText(getActivity(), R.string.Select_a_port, Toast.LENGTH_SHORT).show();
@@ -82,6 +74,7 @@ public class UltrasonicFragment extends Fragment {
             }
         });
 
+        ultrasonicListenToggleButton = root.findViewById(R.id.ultrasonic_toggle_button_listen);
         ultrasonicListenToggleButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked) {
                 controlActivity.listenToUltrasonic(portSensor, ultrasonicViewModel);
@@ -90,6 +83,7 @@ public class UltrasonicFragment extends Fragment {
             }
         });
 
+        final TextView ultrasonicTextView = root.findViewById(R.id.ultrasonic_text_view);
         ultrasonicViewModel.getUltrasonicDistance().observe(getViewLifecycleOwner(), ultrasonicDistance -> {
             ultrasonicTextView.setText(getString(R.string.Ultrasonic_distance, ultrasonicDistance.getDistance(), ultrasonicDistance.getDistanceUnit().name()));
         });
@@ -97,6 +91,7 @@ public class UltrasonicFragment extends Fragment {
         return root;
     }
 
+    // todo handle radio button selection (cm/inch)
     private void portSelectionChanged(final PortSensor portSensor) {
         final PortSensor oldPortSensor = this.portSensor;
         this.portSensor = portSensor;
