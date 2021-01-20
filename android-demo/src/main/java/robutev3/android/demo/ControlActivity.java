@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,13 +25,16 @@ import robutev3.android.Device;
 import robutev3.android.EV3Service;
 import robutev3.android.SensedValue;
 import robutev3.android.demo.ui.BrickInfoViewModel;
+import robutev3.android.demo.ui.ColorSensorViewModel;
 import robutev3.android.demo.ui.Distance;
 import robutev3.android.demo.ui.MotorsViewModel;
 import robutev3.android.demo.ui.SectionsPagerAdapter;
 import robutev3.android.demo.ui.UltrasonicViewModel;
+import robutev3.core.Color;
 import robutev3.core.Interval;
 import robutev3.core.PortSensor;
 import robutev3.core.Sensor;
+import robutev3.core.SensorColor;
 import robutev3.core.SensorUltrasonic;
 import robutev3.core.SoundFile;
 
@@ -44,6 +47,7 @@ public class ControlActivity extends AppCompatActivity {
     private BrickInfoViewModel brickInfoViewModel;
     private MotorsViewModel motorsViewModel;
     private UltrasonicViewModel ultrasonicViewModel;
+    private ColorSensorViewModel colorSensorViewModel;
 
     private BrickService brickService;
 
@@ -58,9 +62,10 @@ public class ControlActivity extends AppCompatActivity {
         final TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-        brickInfoViewModel = ViewModelProviders.of(this).get(BrickInfoViewModel.class);
-        motorsViewModel = ViewModelProviders.of(this).get(MotorsViewModel.class);
-        ultrasonicViewModel = ViewModelProviders.of(this).get(UltrasonicViewModel.class);
+        brickInfoViewModel = new ViewModelProvider(this).get(BrickInfoViewModel.class);
+        motorsViewModel = new ViewModelProvider(this).get(MotorsViewModel.class);
+        ultrasonicViewModel = new ViewModelProvider(this).get(UltrasonicViewModel.class);
+        colorSensorViewModel = new ViewModelProvider(this).get(ColorSensorViewModel.class);
 
         registerToEv3Events();
     }
@@ -163,12 +168,10 @@ public class ControlActivity extends AppCompatActivity {
     }
 
     public void tankForward() {
-//        brickService.brick().motor().portsBandC().turnIndefinitely(20).go();
         brickService.brick().tank().forward(Interval.seconds(1)).go();
     }
 
     public void tankBackward() {
-//        brickService.brick().motor().portsBandC().turnIndefinitely(-20).go();
         brickService.brick().tank().backward(Interval.seconds(1)).go();
     }
 
@@ -177,16 +180,10 @@ public class ControlActivity extends AppCompatActivity {
     }
 
     public void tankLeft() {
-//        brickService.brick().motor().stopAll();
-//        brickService.brick().motor().portB().turnDegrees(360, 20).brake().go();
-//        brickService.brick().motor().portC().turnDegrees(360, -20).brake().go();
         brickService.brick().tank().turnLeft().go();
     }
 
     public void tankRight() {
-//        brickService.brick().motor().stopAll();
-//        brickService.brick().motor().portB().turnDegrees(360, -20).brake().go();
-//        brickService.brick().motor().portC().turnDegrees(360, 20).brake().go();
         brickService.brick().tank().turnRight().go();
     }
 
@@ -195,7 +192,25 @@ public class ControlActivity extends AppCompatActivity {
             case TOUCH:
                 throw new RuntimeException("Operation not implemented"); // todo
             case COLOR:
-                throw new RuntimeException("Operation not implemented"); // todo
+                {
+                    final SensorColor.ColorSensible colorSensible = brickService.brick().sensor().port(portSensor).color();
+                    if(sensorMode == SensorColor.Mode.COLOR) {
+                        final Color color = colorSensible.sense();
+                        Log.d(TAG, "color - COLOR color: " + color);
+                        colorSensorViewModel.setColor(color);
+                    } else if(sensorMode == SensorColor.Mode.REFLECT) {
+                        final int lightIntensity = colorSensible.senseRaw();
+                        Log.d(TAG, "color - REFLECT lightIntensity: " + lightIntensity);
+                        colorSensorViewModel.setReflectedLightIntensity(lightIntensity);
+                    } else if(sensorMode == SensorColor.Mode.AMBIENT) {
+                        final int lightIntensity = colorSensible.senseRaw();
+                        Log.d(TAG, "color - AMBIENT lightIntensity: " + lightIntensity);
+                        colorSensorViewModel.setAmbientLightIntensity(lightIntensity);
+                    } else {
+                        throw new RuntimeException("Unknown sensor mode: " + sensorMode);
+                    }
+                }
+                break;
             case ULTRASONIC:
                 {
                     final SensorUltrasonic.DistanceSensible distanceSensible = brickService.brick().sensor().port(portSensor).ultrasonic();
@@ -222,16 +237,24 @@ public class ControlActivity extends AppCompatActivity {
         }
     }
 
-    public void listenToUltrasonic(final PortSensor portSensor, final UltrasonicViewModel ultrasonicViewModel) {
+    public void listenToUltrasonic(final PortSensor portSensor, final UltrasonicViewModel ultrasonicViewModel) { // todo remove parameter
         Snackbar.make(viewPager, getString(R.string.Listening_to_ultrasonic_at_port, portSensor.getName()), Snackbar.LENGTH_SHORT).show();
         brickService.register(portSensor, Sensor.Type.ULTRASONIC, SensorUltrasonic.Mode.DISTANCE_CENTIMETERS);
-        // todo register ultrasonic view model for broadcasts
     }
 
-    public void unlistenToUltrasonic(final PortSensor portSensor, final UltrasonicViewModel ultrasonicViewModel) {
+    public void unlistenToUltrasonic(final PortSensor portSensor, final UltrasonicViewModel ultrasonicViewModel) { // todo remove parameter
         Snackbar.make(viewPager, R.string.Stopped_listening_to_ultrasonic, Snackbar.LENGTH_SHORT).show();
         brickService.unregister(portSensor, Sensor.Type.ULTRASONIC, SensorUltrasonic.Mode.DISTANCE_CENTIMETERS);
-        // todo unregister ultrasonic view model for broadcasts
+    }
+
+    public void listenToColor(final PortSensor portSensor, final SensorColor.Mode mode) {
+        Snackbar.make(viewPager, getString(R.string.Listening_to_color_at_port, portSensor.getName()), Snackbar.LENGTH_SHORT).show();
+        brickService.register(portSensor, Sensor.Type.COLOR, mode);
+    }
+
+    public void unlistenToColor(final PortSensor portSensor, final SensorColor.Mode mode) {
+        Snackbar.make(viewPager, R.string.Stopped_listening_to_color, Snackbar.LENGTH_SHORT).show();
+        brickService.unregister(portSensor, Sensor.Type.COLOR, mode);
     }
 
     /** Defines callbacks for service binding, passed to bindService() */
@@ -284,20 +307,34 @@ Log.d(TAG, "sensed values: " + sensedValues);//todo
                             final Sensor.Type sensorType = sensedValue.getSensorType();
                             final Sensor.Mode sensorMode = sensedValue.getSensorMode();
                             final Bundle valuesBundle = sensedValue.getValues();
-                            if(SensorUltrasonic.Mode.DISTANCE_CENTIMETERS.name().equalsIgnoreCase(sensorMode.name())) {
-                                final int distanceInCentimeters = valuesBundle.getInt(SensorUltrasonic.VALUE_CENTIMETERS);
-                                ultrasonicViewModel.setDistance(distanceInCentimeters, Distance.DistanceUnit.cm);
-                            } else if(SensorUltrasonic.Mode.DISTANCE_INCHES.name().equalsIgnoreCase(sensorMode.name())) {
-                                final int distanceInInches = valuesBundle.getInt(SensorUltrasonic.VALUE_INCHES);
-                                ultrasonicViewModel.setDistance(distanceInInches, Distance.DistanceUnit.in);
-                            }
+                            if(sensorType == Sensor.Type.ULTRASONIC) {
+                                if(SensorUltrasonic.Mode.DISTANCE_CENTIMETERS == sensorMode) {
+                                    final int distanceInCentimeters = valuesBundle.getInt(SensorUltrasonic.VALUE_CENTIMETERS);
+                                    ultrasonicViewModel.setDistance(distanceInCentimeters, Distance.DistanceUnit.cm);
+                                } else if(SensorUltrasonic.Mode.DISTANCE_INCHES == sensorMode) {
+                                    final int distanceInInches = valuesBundle.getInt(SensorUltrasonic.VALUE_INCHES);
+                                    ultrasonicViewModel.setDistance(distanceInInches, Distance.DistanceUnit.in);
+                                }
+                            } else if(sensorType == Sensor.Type.COLOR) {
+                                if(SensorColor.Mode.COLOR == sensorMode) {
+                                    final Color color = (Color) valuesBundle.getSerializable(SensorColor.VALUE_COLOR);
+                                    colorSensorViewModel.setColor(color);
+                                } else if(SensorColor.Mode.REFLECT == sensorMode) {
+                                    final int lightIntensity = valuesBundle.getInt(SensorColor.VALUE_LIGHT_INTENSITY);
+                                    colorSensorViewModel.setReflectedLightIntensity(lightIntensity);
+                                } else if(SensorColor.Mode.AMBIENT == sensorMode) {
+                                    final int lightIntensity = valuesBundle.getInt(SensorColor.VALUE_LIGHT_INTENSITY);
+                                    colorSensorViewModel.setAmbientLightIntensity(lightIntensity);
+                                }
+                            } // todo else...
                         }
                     }
                     break;
                 case EV3Service.EV3_ERROR_DISCONNECTED:
                     Toast.makeText(context, R.string.Could_not_connect, Toast.LENGTH_SHORT).show();
                     brickInfoViewModel.setStopped();
-                    finish();
+                    brickInfoViewModel.setFailed();
+
                     break;
                 default:
                     // unknown action

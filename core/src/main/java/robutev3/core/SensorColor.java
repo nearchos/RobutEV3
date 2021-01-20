@@ -6,13 +6,20 @@ package robutev3.core;
  */
 public class SensorColor {
 
+    public static final String VALUE_COLOR = "VALUE_COLOR";
+    public static final String VALUE_LIGHT_INTENSITY = "VALUE_LIGHT_INTENSITY";
+
     public enum Mode implements Sensor.Mode {
         /** Measures the amount of light reflected */
         REFLECT,
         /** Measures the amount of ambient light, i.e. with emitting LED off */
         AMBIENT,
         /** Detects the color of the object where the light is reflected */
-        COLOR
+        COLOR;
+
+        public static Mode fromName(final String name) {
+            return valueOf(name);
+        }
     }
 
     private final Brick brick;
@@ -43,9 +50,9 @@ public class SensorColor {
             return brick.senseRaw(port.getCode(), Code.SENSOR_TYPE_COLOR, Code.SENSOR_MODE_COLOR_COLOR);
         }
 
-        public Colors sense() {
+        public Color sense() {
             final int colorCode = senseRaw();
-            return Colors.fromCode(colorCode);
+            return Color.fromCode(colorCode);
         }
     }
 }

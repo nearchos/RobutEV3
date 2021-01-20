@@ -4,7 +4,7 @@ package robutev3.core;
  * @author Nearchos
  * Created: 14-Dec-19
  */
-public enum Colors {
+public enum Color {
 
     UNKNOWN (0),
     BLACK   (1),
@@ -17,7 +17,7 @@ public enum Colors {
 
     private int code;
 
-    Colors(int code) {
+    Color(int code) {
         this.code = code;
     }
 
@@ -25,7 +25,7 @@ public enum Colors {
         return code;
     }
 
-    public static Colors fromCode(final int code) {
+    public static Color fromCode(final int code) {
         switch (code) {
             case 0: return UNKNOWN;
             case 1: return BLACK;

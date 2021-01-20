@@ -154,20 +154,19 @@ public class Brick implements IBrick {
         }
     }
 
-    void motorTankLeft(final int time) {
-        motorTankTurn(true, time);
+    void motorTankLeft(final int speedValue, final int timeInMilliseconds) {
+        motorTankTurn(true, speedValue, timeInMilliseconds);
     }
 
-    void motorTankRight(final int time) {
-        motorTankTurn(false, time);
+    void motorTankRight(final int speedValue, final int timeInMilliseconds) {
+        motorTankTurn(false, speedValue, timeInMilliseconds);
     }
 
-    private void motorTankTurn(final boolean left, final int time) {
-        final int defaultSpeed= 50;
+    private void motorTankTurn(final boolean left, final int speedValue, final int timeInMilliseconds) {
         try {
             Command c = new Command(Code.DIRECT_COMMAND_NO_REPLY);
-            c.motorTimeAtSpeed(PortMotor.B.getCode(), left ? -defaultSpeed : +defaultSpeed, 0, time, 0, true);
-            c.motorTimeAtSpeed(PortMotor.C.getCode(), left ? +defaultSpeed : -defaultSpeed, 0, time, 0, true);
+            c.motorTimeAtSpeed(PortMotor.B.getCode(), left ? -speedValue : +speedValue, 0, timeInMilliseconds, 0, true);
+            c.motorTimeAtSpeed(PortMotor.C.getCode(), left ? +speedValue : -speedValue, 0, timeInMilliseconds, 0, true);
             final byte ports = (byte) (PortMotor.B.getCode() | PortMotor.C.getCode());
             c.motorStartMotor(ports);
             sendCommand(c);

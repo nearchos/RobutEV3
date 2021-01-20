@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import robutev3.core.Sensor;
+import robutev3.core.SensorColor;
 import robutev3.core.SensorUltrasonic;
 
 /**
@@ -49,6 +50,15 @@ public class SensedValue implements Parcelable {
             final Sensor.Type sensorType = Sensor.Type.valueOf(source.readString());
             final Sensor.Mode sensorMode;
             switch (sensorType) {
+                case TOUCH:
+                    // todo
+                    throw new UnsupportedOperationException();
+                case COLOR:
+                    sensorMode = SensorColor.Mode.fromName(source.readString());
+                    break;
+                case INFRA_RED:
+                    // todo
+                    throw new UnsupportedOperationException();
                 case ULTRASONIC:
                     sensorMode = SensorUltrasonic.Mode.fromName(source.readString());
                     break;

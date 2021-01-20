@@ -43,10 +43,16 @@ public class BrickInfoViewModel extends ViewModel {
         mBrickInfoMutableLiveData.setValue(mBrickInfo);
     }
 
+    public void setFailed() {
+        mBrickInfo.failed = true;
+        mBrickInfoMutableLiveData.setValue(mBrickInfo);
+    }
+
     public class BrickInfo implements Serializable {
 
         private boolean connected = false;
         private boolean started = false;
+        private boolean failed = false;
 
         boolean isConnected() {
             return connected;
@@ -54,6 +60,10 @@ public class BrickInfoViewModel extends ViewModel {
 
         boolean isStarted() {
             return started;
+        }
+
+        boolean isFailed() {
+            return failed;
         }
     }
 }

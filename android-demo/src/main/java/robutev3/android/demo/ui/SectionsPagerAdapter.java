@@ -18,7 +18,7 @@ import robutev3.android.demo.R;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int [] TAB_TITLES = { R.string.Brick_info, R.string.Sound, R.string.Motors, R.string.Tank, R.string.Ultrasonic };
+    private static final int [] TAB_TITLES = { R.string.Brick_info, R.string.Sound, R.string.Motors, R.string.Tank, R.string.Ultrasonic, R.string.Color };
 
     private final Context mContext;
 
@@ -36,6 +36,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 2: return MotorsFragment.newInstance();
             case 3: return TankFragment.newInstance();
             case 4: return UltrasonicFragment.newInstance();
+            case 5: return ColorFragment.newInstance();
             default: throw new RuntimeException("Invalid tab position: " + position);
         }
     }
