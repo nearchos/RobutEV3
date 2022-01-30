@@ -134,6 +134,7 @@
             <Button
                 android:id="@+id/buttonDo"
                 style="?android:attr/buttonBarButtonStyle"
+                android:maxLines="1"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_weight="1"
@@ -142,6 +143,7 @@
             <Button
                 android:id="@+id/buttonRe"
                 style="?android:attr/buttonBarButtonStyle"
+                android:maxLines="1"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_weight="1"
@@ -150,6 +152,7 @@
             <Button
                 android:id="@+id/buttonMi"
                 style="?android:attr/buttonBarButtonStyle"
+                android:maxLines="1"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_weight="1"
@@ -158,6 +161,7 @@
             <Button
                 android:id="@+id/buttonFa"
                 style="?android:attr/buttonBarButtonStyle"
+                android:maxLines="1"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_weight="1"
@@ -166,6 +170,7 @@
             <Button
                 android:id="@+id/buttonSol"
                 style="?android:attr/buttonBarButtonStyle"
+                android:maxLines="1"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_weight="1"
@@ -174,6 +179,7 @@
             <Button
                 android:id="@+id/buttonLa"
                 style="?android:attr/buttonBarButtonStyle"
+                android:maxLines="1"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_weight="1"
@@ -182,6 +188,7 @@
             <Button
                 android:id="@+id/buttonTi"
                 style="?android:attr/buttonBarButtonStyle"
+                android:maxLines="1"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_weight="1"
@@ -190,6 +197,7 @@
             <Button
                 android:id="@+id/buttonDo_P"
                 style="?android:attr/buttonBarButtonStyle"
+                android:maxLines="1"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_weight="1"

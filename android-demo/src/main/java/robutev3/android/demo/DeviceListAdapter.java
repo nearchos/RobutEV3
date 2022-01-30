@@ -53,10 +53,10 @@ public class DeviceListAdapter extends ArrayAdapter<Device> {
         if(device.getType() == Device.Type.TYPE_BLUETOOTH) {
             // if mac address is a LEGO one, show with accent color
             macAddressTextView.setTextColor(address.startsWith(BLUETOOTH_OUI_LEGO) ?
-                    getContext().getResources().getColor(R.color.colorAccent) :
-                    getContext().getResources().getColor(R.color.colorPrimary));
+                    getContext().getResources().getColor(R.color.colorAccent, getContext().getTheme()) :
+                    getContext().getResources().getColor(R.color.colorPrimary, getContext().getTheme()));
         } else {
-            macAddressTextView.setTextColor(getContext().getResources().getColor(R.color.colorPrimary));
+            macAddressTextView.setTextColor(getContext().getResources().getColor(R.color.colorPrimary, getContext().getTheme()));
         }
 
         // Return the completed view to render on screen

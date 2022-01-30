@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import java.util.Locale;
+
 import robutev3.core.Color;
 import robutev3.core.SensorColor;
 
@@ -15,9 +17,9 @@ import robutev3.core.SensorColor;
  */
 public class ColorSensorViewModel extends ViewModel {
 
-        private MutableLiveData<ColorValue> mColorMutableLiveData = new MutableLiveData<>();
+        private final MutableLiveData<ColorValue> mColorMutableLiveData = new MutableLiveData<>();
 
-        private LiveData<ColorValue> mColorLiveData = Transformations.map(mColorMutableLiveData, input -> input);
+        private final LiveData<ColorValue> mColorLiveData = Transformations.map(mColorMutableLiveData, input -> input);
 
         LiveData<ColorValue> getColorLiveData() {
             return mColorLiveData;
@@ -70,7 +72,7 @@ public class ColorSensorViewModel extends ViewModel {
                     return color.toString();
                 case REFLECT:
                 case AMBIENT:
-                    return lightIntensity + "(" + (lightIntensity/255f) + "%)";
+                    return String.format(Locale.getDefault(), "%d (%.2f)", lightIntensity, lightIntensity/255f);
                 default:
                     return "Unknown value";
             }

@@ -3,6 +3,7 @@
     package="robutev3.android.demo">
 
     <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
 
     <application
         android:allowBackup="true"
@@ -15,6 +16,7 @@
         <activity
             android:name=".ControlActivity"
             android:label="@string/title_activity_control"
+            android:exported="false"
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity">
             <meta-data
@@ -22,7 +24,9 @@
                 android:value="robutev3.android.demo.MainActivity" />
         </activity>
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:exported="true"
+            android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

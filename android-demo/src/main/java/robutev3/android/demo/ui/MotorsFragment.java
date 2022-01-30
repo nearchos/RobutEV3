@@ -9,6 +9,7 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -23,7 +24,7 @@ public class MotorsFragment extends Fragment implements SeekBar.OnSeekBarChangeL
 
     private MotorsViewModel motorsViewModel;
 
-    private Switch lockedPortsBandC;
+    private SwitchCompat lockedPortsBandC;
     private SeekBar portASeekBar;
     private SeekBar portBSeekBar;
     private SeekBar portCSeekBar;
@@ -55,7 +56,7 @@ public class MotorsFragment extends Fragment implements SeekBar.OnSeekBarChangeL
         portDSeekBar = root.findViewById(R.id.portDSeekBar);
         portDSeekBar.setOnSeekBarChangeListener(this);
 
-        motorsViewModel.getMotorsInfo().observe(this, motorsInfo -> {
+        motorsViewModel.getMotorsInfo().observe(getViewLifecycleOwner(), motorsInfo -> {
             Log.d(TAG, "motors info changed: " + motorsInfo);
             portASeekBar.setProgress(motorsInfo.getPowerPortA() / 10 + 11);
             portBSeekBar.setProgress(motorsInfo.getPowerPortB() / 10  + 11);

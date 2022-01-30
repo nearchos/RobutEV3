@@ -13,11 +13,13 @@ import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import robutev3.android.demo.ControlActivity;
 import robutev3.android.demo.R;
+import robutev3.core.Color;
 import robutev3.core.PortSensor;
 import robutev3.core.Sensor;
 import robutev3.core.SensorColor;
@@ -31,6 +33,7 @@ public class ColorFragment extends Fragment {
     private ColorSensorViewModel colorSensorViewModel;
 
     private TextView colorTextView;
+    private View colorColorView;
     private ToggleButton colorListenToggleButton;
 
     static ColorFragment newInstance() {
@@ -98,8 +101,35 @@ public class ColorFragment extends Fragment {
         });
 
         colorTextView = root.findViewById(R.id.color_text_view);
+        colorColorView = root.findViewById(R.id.color_color_view);
         colorSensorViewModel.getColorLiveData().observe(getViewLifecycleOwner(), colorValue -> {
             colorTextView.setText(getString(R.string.Color_sensed, colorValue.toString()));
+            final Color color = colorValue.getColor();
+            switch (color) {
+                case BLACK:
+                    colorColorView.setBackgroundColor(ContextCompat.getColor(controlActivity, R.color.black));
+                    break;
+                case BLUE:
+                    colorColorView.setBackgroundColor(ContextCompat.getColor(controlActivity, R.color.blue));
+                    break;
+                case GREEN:
+                    colorColorView.setBackgroundColor(ContextCompat.getColor(controlActivity, R.color.green));
+                    break;
+                case YELLOW:
+                    colorColorView.setBackgroundColor(ContextCompat.getColor(controlActivity, R.color.yellow));
+                    break;
+                case RED:
+                    colorColorView.setBackgroundColor(ContextCompat.getColor(controlActivity, R.color.red));
+                    break;
+                case WHITE:
+                    colorColorView.setBackgroundColor(ContextCompat.getColor(controlActivity, R.color.white));
+                    break;
+                case BROWN:
+                    colorColorView.setBackgroundColor(ContextCompat.getColor(controlActivity, R.color.brown));
+                    break;
+                default:
+                    colorColorView.setBackgroundResource(R.drawable.bordered_background);
+            }
         });
 
         return root;

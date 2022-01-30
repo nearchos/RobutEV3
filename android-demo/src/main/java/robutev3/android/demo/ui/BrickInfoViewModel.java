@@ -13,11 +13,11 @@ import java.io.Serializable;
  */
 public class BrickInfoViewModel extends ViewModel {
 
-    private BrickInfo mBrickInfo = new BrickInfo();
+    private final BrickInfo mBrickInfo = new BrickInfo();
 
-    private MutableLiveData<BrickInfoViewModel.BrickInfo> mBrickInfoMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<BrickInfoViewModel.BrickInfo> mBrickInfoMutableLiveData = new MutableLiveData<>();
 
-    private LiveData<BrickInfoViewModel.BrickInfo> mBrickInfoLiveData = Transformations.map(mBrickInfoMutableLiveData, input -> input);
+    private final LiveData<BrickInfoViewModel.BrickInfo> mBrickInfoLiveData = Transformations.map(mBrickInfoMutableLiveData, input -> input);
 
     LiveData<BrickInfoViewModel.BrickInfo> getBrickInfo() {
         return mBrickInfoLiveData;
@@ -48,7 +48,7 @@ public class BrickInfoViewModel extends ViewModel {
         mBrickInfoMutableLiveData.setValue(mBrickInfo);
     }
 
-    public class BrickInfo implements Serializable {
+    public static class BrickInfo implements Serializable {
 
         private boolean connected = false;
         private boolean started = false;

@@ -1,7 +1,9 @@
 package robutev3.android.demo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -13,12 +15,14 @@ import android.content.pm.PackageManager;
 import android.hardware.usb.UsbAccessory;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
     private final Vector<Device> allDevices = new Vector<>();
 
-    private PendingIntent permissionIntent;
+    private PendingIntent permissionUsbIntent;
+    private final int REQUEST_BLUETOOTH_CONNECT_ID = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         this.bluetoothNotEnabled = findViewById(R.id.bluetoothNotEnabled);
         final ListView devicesListView = findViewById(R.id.devicesListView);
 
-        permissionIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+        permissionUsbIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), PendingIntent.FLAG_IMMUTABLE);
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
         registerReceiver(usbReceiver, filter);
 
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Get USB devices
         final HashMap<String, UsbDevice> usbDevices = mUsbManager.getDeviceList();
-        for(final Map.Entry<String,UsbDevice> entry : usbDevices.entrySet()) {
+        for (final Map.Entry<String, UsbDevice> entry : usbDevices.entrySet()) {
             final String name = entry.getKey();
             final UsbDevice usbDevice = entry.getValue();
             allDevices.add(new Device(Device.Type.TYPE_USB, name,
@@ -110,14 +115,14 @@ public class MainActivity extends AppCompatActivity {
                             usbDevice.getDeviceName(),
                             name,
                             mUsbManager.hasPermission(usbDevice))));
-            if(!mUsbManager.hasPermission(usbDevice)) {
-                mUsbManager.requestPermission(usbDevice, permissionIntent);
+            if (!mUsbManager.hasPermission(usbDevice)) {
+                mUsbManager.requestPermission(usbDevice, permissionUsbIntent);
             }
         }
 
-        final UsbAccessory [] usbAccessories = mUsbManager.getAccessoryList();
-        if(usbAccessories != null) {
-            for(final UsbAccessory usbAccessory : usbAccessories) {
+        final UsbAccessory[] usbAccessories = mUsbManager.getAccessoryList();
+        if (usbAccessories != null) {
+            for (final UsbAccessory usbAccessory : usbAccessories) {
                 Log.d(TAG, String.format("usbAccessory : serial: %4s, model: %4s, manufacturer: %s, hasPermission: %b",
                         usbAccessory.getSerial(),
                         usbAccessory.getModel(),
@@ -130,6 +135,13 @@ public class MainActivity extends AppCompatActivity {
                                 usbAccessory.getManufacturer(),
                                 usbAccessory.getVersion(),
                                 mUsbManager.hasPermission(usbAccessory))));
+            }
+        }
+
+        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[] {Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_BLUETOOTH_CONNECT_ID);
+                return;
             }
         }
 
@@ -173,4 +185,22 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == REQUEST_BLUETOOTH_CONNECT_ID) {
+            for(int i = 0; i < permissions.length; i++) {
+                final String permission = permissions[i];
+                if(permission.equals(Manifest.permission.BLUETOOTH_CONNECT)) {
+                    if(grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                        updateDevices();
+                    } else {
+                        // inform the user that the permission is required
+                        Toast.makeText(this, R.string.Bluetooth_is_not_enabled, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }
+    }
 }

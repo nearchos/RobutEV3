@@ -28,6 +28,7 @@
 
             <SeekBar
                 android:id="@+id/portASeekBar"
+                android:thumb="@drawable/thumb_image"
                 android:max="21"
                 android:progress="11"
                 android:layout_width="match_parent"
@@ -48,6 +49,7 @@
 
             <SeekBar
                 android:id="@+id/portBSeekBar"
+                android:thumb="@drawable/thumb_image"
                 android:max="21"
                 android:progress="11"
                 android:layout_width="match_parent"
@@ -69,7 +71,7 @@
                     android:layout_weight="1"
                     android:layout_height="1dp"/>
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/lockPortsBandC"
                     android:text="@string/Lock_ports_B_and_C"
                     android:textColor="@color/colorAccent"
@@ -98,6 +100,7 @@
 
             <SeekBar
                 android:id="@+id/portCSeekBar"
+                android:thumb="@drawable/thumb_image"
                 android:max="21"
                 android:progress="11"
                 android:layout_width="match_parent"
@@ -118,6 +121,7 @@
 
             <SeekBar
                 android:id="@+id/portDSeekBar"
+                android:thumb="@drawable/thumb_image"
                 android:max="21"
                 android:progress="11"
                 android:layout_width="match_parent"
